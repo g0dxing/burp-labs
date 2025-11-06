@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burp-Labs 靶场实验室</title>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #444;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+        
+        .author {
+            margin-top: 10px;
+            font-style: italic;
+            color: #888;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .category {
+            margin-bottom: 50px;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+        
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .level-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .level-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .level-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .level-difficulty {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .star {
+            color: gold;
+            margin-right: 2px;
+        }
+        
+        .level-skills {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        
+        .level-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+        
+        .level-link:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid #444;
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .levels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 难度标签 */
+        .difficulty-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .beginner {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .intermediate {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .advanced {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .expert {
+            background-color: #9b59b6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Burp-Labs 靶场实验室</h1>
+            <p class="subtitle">一个专为学习Burp Suite安全测试工具设计的综合性靶场项目</p>
+            <p class="author">作者: g0dxing</p>
+        </header>
+        
+        <section class="description">
+            <p>本项目包含多个难度递增的关卡，覆盖了Web安全测试中的各种常见场景和技术。</p>
+            <p>从基础的爆破攻击到复杂的加密和频率限制绕过，逐步掌握Burp Suite的使用技巧。</p>
+        </section>
+        
+        <!-- 基础篇 -->
+        <section class="category">
+            <h2 class="category-title">基础篇</h2>
+            <div class="levels-grid">
+                <div class="level-card">
+                    <div class="difficulty-badge beginner">入门</div>
+                    <div class="level-number">Level 1</div>
+                    <div class="level-title">基础爆破</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span>
+                    </div>
+                    <div class="level-skills">GET请求、基础攻击器使用</div>
+                    <a href="level1/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge beginner">入门</div>
+                    <div class="level-number">Level 2</div>
+                    <div class="level-title">响应过滤</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span>
+                    </div>
+                    <div class="level-skills">长度一致场景下的过滤器应用</div>
+                    <a href="level2/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge beginner">入门</div>
+                    <div class="level-number">Level 3</div>
+                    <div class="level-title">用户名枚举</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">固定用户名的密码爆破</div>
+                    <a href="level3/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge beginner">入门</div>
+                    <div class="level-number">Level 4</div>
+                    <div class="level-title">高级过滤</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">用户名固定+长度一致的双重挑战</div>
+                    <a href="level4/login.html" class="level-link">开始挑战</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 中级篇 -->
+        <section class="category">
+            <h2 class="category-title">中级篇</h2>
+            <div class="levels-grid">
+                <div class="level-card">
+                    <div class="difficulty-badge intermediate">中级</div>
+                    <div class="level-number">Level 5</div>
+                    <div class="level-title">POST攻击</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">POST请求处理、参数构造</div>
+                    <a href="level5/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge intermediate">中级</div>
+                    <div class="level-number">Level 6</div>
+                    <div class="level-title">中文响应</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">非英文响应的结果识别</div>
+                    <a href="level6/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge intermediate">中级</div>
+                    <div class="level-number">Level 7</div>
+                    <div class="level-title">重定向处理</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">302跳转的成功判断</div>
+                    <a href="level7/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge intermediate">中级</div>
+                    <div class="level-number">Level 8</div>
+                    <div class="level-title">Base64编码</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">客户端编码的识别和绕过</div>
+                    <a href="level8/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge intermediate">中级</div>
+                    <div class="level-number">Level 9</div>
+                    <div class="level-title">MD5加密</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">哈希加密的爆破策略</div>
+                    <a href="level9/login.html" class="level-link">开始挑战</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 高级篇 -->
+        <section class="category">
+            <h2 class="category-title">高级篇</h2>
+            <div class="levels-grid">
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 10</div>
+                    <div class="level-title">双参数攻击</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">Pitchfork模式、MD5校验</div>
+                    <a href="level10/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 11</div>
+                    <div class="level-title">前缀处理</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">固定前缀的密码构造</div>
+                    <a href="level11/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 12</div>
+                    <div class="level-title">时间戳验证</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">时效性token的处理</div>
+                    <a href="level12/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 13</div>
+                    <div class="level-title">JSON格式</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">JSON数据结构的处理</div>
+                    <a href="level13/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 14</div>
+                    <div class="level-title">Base64+JSON</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">多重编码的层层解析</div>
+                    <a href="level14/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 15</div>
+                    <div class="level-title">JSON+MD5</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">哈希化的JSON数据处理</div>
+                    <a href="level15/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge advanced">高级</div>
+                    <div class="level-number">Level 16</div>
+                    <div class="level-title">复杂编码</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">JSON→Base64→MD5三重转换</div>
+                    <a href="level16/login.html" class="level-link">开始挑战</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 专家篇 -->
+        <section class="category">
+            <h2 class="category-title">专家篇</h2>
+            <div class="levels-grid">
+                <div class="level-card">
+                    <div class="difficulty-badge expert">专家</div>
+                    <div class="level-number">Level 17</div>
+                    <div class="level-title">频率限制</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">Session控制的请求频率绕过</div>
+                    <a href="level17/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge expert">专家</div>
+                    <div class="level-number">Level 18</div>
+                    <div class="level-title">MD5加盐</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">采用 盐+文本 的md5加盐模式</div>
+                    <a href="level18/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge expert">专家</div>
+                    <div class="level-number">Level 19</div>
+                    <div class="level-title">HMAC MD5加盐</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">考验信息收集能力</div>
+                    <a href="level19/login.html" class="level-link">开始挑战</a>
+                </div>
+                
+                <div class="level-card">
+                    <div class="difficulty-badge expert">专家</div>
+                    <div class="level-number">Level 20</div>
+                    <div class="level-title">脚本辅助</div>
+                    <div class="level-difficulty">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    </div>
+                    <div class="level-skills">Python脚本在复杂场景中的应用</div>
+                    <a href="level20/login.html" class="level-link">开始挑战</a>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Burp-Labs 靶场实验室 &copy; 2023 | 作者: g0dxing</p>
+            <p>本靶场仅用于教育目的，请在合法授权的环境中使用这些技术。</p>
+        </footer>
+    </div>
+</body>
+</html>
