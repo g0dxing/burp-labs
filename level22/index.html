@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球贸易通 - 专业外贸B2B平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0F1A2B;
+            --secondary-blue: #2563EB;
+            --text-white: #FFFFFF;
+            --text-gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #EF4444;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 50%, var(--primary-bg) 100%);
+            min-height: 100vh;
+        }
+
+        .hero-bg {
+            background: url('resources/hero-bg.jpg') center/cover no-repeat;
+            position: relative;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 26, 43, 0.7);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--secondary-blue), #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
+        }
+
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .nav-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 26, 43, 0.9);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .splide__slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .modal input {
+            color: #333 !important;
+        }
+
+        .modal input::placeholder {
+            color: #666 !important;
+        }
+    </style>
+</head>
+
+<body class="text-white">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 nav-blur border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html"
+                            class="text-white hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">首页</a>
+                        <a href="products.html"
+                            class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">产品中心</a>
+                        <a href="#services"
+                            class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">服务优势</a>
+                        <a href="about.html"
+    class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">关于我们</a>
+                        <button onclick="showLoginModal()"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            登录
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="text-white block px-3 py-2 text-base font-medium">首页</a>
+                <a href="products.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">产品中心</a>
+                <a href="#services"
+                    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">服务优势</a>
+<a href="about.html" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">关于我们</a>
+                    <button onclick="showLoginModal()"
+                    class="w-full text-left text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">
+                    登录
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero-bg min-h-screen flex items-center relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 floating-animation">
+                        <span class="gradient-text">全球贸易</span><br>
+                        <span class="text-white">专业服务</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                        连接全球市场，提供专业外贸服务。我们致力于为中小企业搭建国际贸易桥梁，
+                        助力您的产品走向世界，实现商业价值的最大化。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="products.html"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all transform hover:scale-105">
+                            浏览产品
+                        </a>
+                        <button onclick="showLoginModal()"
+                            class="border-2 border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white px-8 py-3 rounded-lg text-lg font-medium transition-all">
+                            立即合作
+                        </button>
+                    </div>
+                </div>
+
+                <div class="floating-animation" style="animation-delay: -2s;">
+                    <div class="splide" id="hero-carousel">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                    <img src="https://kimi-web-img.moonshot.cn/img/www.silailor.in/bcb3f58faab250e46d6cc2333be968f6af049ebf.jpg"
+                                        alt="纺织面料">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="https://kimi-web-img.moonshot.cn/img/cdn.builder.io/3e451407c1f8c76eb4825954d6af552904aefe01"
+                                        alt="家居装饰">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/39539ad4d866cf3793a1cfc66e098f4c47597d43.jpg"
+                                        alt="太阳能板">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="https://kimi-web-img.moonshot.cn/img/www.supplyone.com/386ade5f44beeb2e757c92484db504b5e9746b06.jpg"
+                                        alt="包装设备">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门产品 -->
+    <section class="py-20 bg-gradient-to-b from-transparent to-gray-900/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">
+                    <span class="gradient-text">热门产品</span>
+                </h2>
+                <p class="text-xl text-gray-300">精选优质产品，满足您的贸易需求</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="product-card rounded-xl overflow-hidden shadow-lg cursor-pointer"
+                    onclick="showProductDetail('纺织面料', '高品质纺织面料，适用于服装制造和家居装饰')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.silailor.in/bcb3f58faab250e46d6cc2333be968f6af049ebf.jpg"
+                            alt="纺织面料" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">纺织面料</h3>
+                        <p class="text-gray-600 mb-4">高品质纺织面料，适用于服装制造</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold">¥25.80/米</span>
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card rounded-xl overflow-hidden shadow-lg cursor-pointer"
+                    onclick="showProductDetail('智能家居', '现代化智能家居产品，提升生活品质')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/cdn.builder.io/3e451407c1f8c76eb4825954d6af552904aefe01"
+                            alt="智能家居" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">智能家居</h3>
+                        <p class="text-gray-600 mb-4">现代化智能家居，提升生活品质</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold">¥299.00/件</span>
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card rounded-xl overflow-hidden shadow-lg cursor-pointer"
+                    onclick="showProductDetail('太阳能设备', '高效太阳能发电设备，清洁能源解决方案')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/39539ad4d866cf3793a1cfc66e098f4c47597d43.jpg"
+                            alt="太阳能设备" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">太阳能设备</h3>
+                        <p class="text-gray-600 mb-4">高效太阳能发电设备，清洁能源</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold">¥1,299.00/套</span>
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card rounded-xl overflow-hidden shadow-lg cursor-pointer"
+                    onclick="showProductDetail('包装机械', '自动化包装机械设备，提升生产效率')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.supplyone.com/386ade5f44beeb2e757c92484db504b5e9746b06.jpg"
+                            alt="包装机械" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">包装机械</h3>
+                        <p class="text-gray-600 mb-4">自动化包装设备，提升生产效率</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold">¥8,999.00/台</span>
+                            <button
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="products.html"
+                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all transform hover:scale-105">
+                    查看更多产品
+                    <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务优势 -->
+    <section id="services" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">
+                    <span class="gradient-text">服务优势</span>
+                </h2>
+                <p class="text-xl text-gray-300">专业团队，为您提供全方位贸易服务</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-8 glass-effect rounded-xl">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">全球网络</h3>
+                    <p class="text-gray-300">覆盖全球主要贸易市场，连接世界各地优质供应商和采购商</p>
+                </div>
+
+                <div class="text-center p-8 glass-effect rounded-xl">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">品质保证</h3>
+                    <p class="text-gray-300">严格的质量控制体系，确保每一件产品都符合国际标准</p>
+                </div>
+
+                <div class="text-center p-8 glass-effect rounded-xl">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">快速响应</h3>
+                    <p class="text-gray-300">24小时在线客服，快速响应您的需求，提供专业解决方案</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 bg-opacity-80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+                <p class="text-gray-400 mb-4">专业外贸B2B平台，连接全球市场</p>
+                <p class="text-gray-500 text-sm">© 2025 全球贸易通. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <button onclick="hideLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">用户登录</h3>
+            <p class="text-gray-600">请填写您的信息进行登录</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">账号</label>
+                <input type="text" id="username" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                <input type="password" id="password" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                登录
+            </button>
+        </form>
+    </div>
+</div>
+
+    <!-- 产品详情模态框 -->
+    <div id="productModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="hideProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="productDetailContent">
+                <!-- 产品详情内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

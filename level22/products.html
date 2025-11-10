@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品中心 - 全球贸易通</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0F1A2B;
+            --secondary-blue: #2563EB;
+            --text-white: #FFFFFF;
+            --text-gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #EF4444;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 50%, var(--primary-bg) 100%);
+            min-height: 100vh;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--secondary-blue), #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 26, 43, 0.9);
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal input {
+            color: #333 !important;
+        }
+
+        .modal input::placeholder {
+            color: #666 !important;
+        }
+    </style>
+</head>
+
+<body class="text-white">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 nav-blur border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+
+<div class="hidden md:block">
+    <div class="ml-10 flex items-baseline space-x-8">
+        <a href="index.html"
+            class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">首页</a>
+        <a href="products.html"
+            class="text-white hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">产品中心</a>
+        <a href="index.html#services"
+            class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">服务优势</a>
+        <a href="about.html" class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">关于我们</a>
+        <button onclick="showLoginModal()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            登录
+        </button>
+    </div>
+</div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-95">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">首页</a>
+                <a href="products.html" class="text-white block px-3 py-2 text-base font-medium">产品中心</a>
+                <a href="index.html#services"
+                    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">服务优势</a>
+                <a href="about.html"
+    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">关于我们</a>
+                <button onclick="showLoginModal()"
+                    class="w-full text-left text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">
+                    登录
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 搜索区域 -->
+    <section class="pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    <span class="gradient-text">产品中心</span>
+                </h1>
+                <p class="text-xl text-gray-300">发现优质产品，开启贸易新篇章</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="搜索产品名称、描述..."
+                        class="w-full px-6 py-4 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="searchProducts()"
+                        class="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品展示区域 -->
+    <section class="pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- 侧边栏筛选 -->
+                <div class="lg:w-1/4">
+                    <div class="sidebar rounded-xl p-6 sticky top-24">
+                        <h3 class="text-xl font-semibold mb-6">产品分类</h3>
+
+                        <div class="space-y-3 mb-8">
+                            <button onclick="filterProducts('all')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors active">
+                                全部产品
+                            </button>
+                            <button onclick="filterProducts('纺织品')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                纺织品
+                            </button>
+                            <button onclick="filterProducts('电子产品')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                电子产品
+                            </button>
+                            <button onclick="filterProducts('能源设备')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                能源设备
+                            </button>
+                            <button onclick="filterProducts('机械设备')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                机械设备
+                            </button>
+                            <button onclick="filterProducts('建材')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                建筑材料
+                            </button>
+                            <button onclick="filterProducts('安全用品')"
+                                class="filter-btn w-full text-left px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                                安全防护
+                            </button>
+                        </div>
+
+                        <h3 class="text-xl font-semibold mb-4">价格区间</h3>
+                        <div class="space-y-3">
+                            <button onclick="filterByPrice('all')"
+                                class="filter-btn w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm">
+                                全部价格
+                            </button>
+                            <button onclick="filterByPrice('0-100')"
+                                class="filter-btn w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm">
+                                ¥0 - ¥100
+                            </button>
+                            <button onclick="filterByPrice('100-500')"
+                                class="filter-btn w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm">
+                                ¥100 - ¥500
+                            </button>
+                            <button onclick="filterByPrice('500-1000')"
+                                class="filter-btn w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm">
+                                ¥500 - ¥1000
+                            </button>
+                            <button onclick="filterByPrice('1000+')"
+                                class="filter-btn w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm">
+                                ¥1000以上
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品网格 -->
+                <div class="lg:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-gray-300">
+                            共找到 <span id="productCount">0</span> 个产品
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <select id="sortSelect" onchange="sortProducts()"
+                                class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="default">默认排序</option>
+                                <option value="price-low">价格从低到高</option>
+                                <option value="price-high">价格从高到低</option>
+                                <option value="name">名称排序</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- 产品卡片将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 分页 -->
+                    <div id="pagination" class="flex justify-center mt-12">
+                        <div class="flex space-x-2">
+                            <button onclick="changePage(-1)"
+                                class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+                                上一页
+                            </button>
+                            <span id="pageInfo" class="px-4 py-2 text-gray-300">第 1 页，共 3 页</span>
+                            <button onclick="changePage(1)"
+                                class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+                                下一页
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 bg-opacity-80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+                <p class="text-gray-400 mb-4">专业外贸B2B平台，连接全球市场</p>
+                <p class="text-gray-500 text-sm">© 2025 全球贸易通. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+<!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <button onclick="hideLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">用户登录</h3>
+            <p class="text-gray-600">请填写您的信息进行登录</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">账号</label>
+                <input type="text" id="username" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                <input type="password" id="password" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                登录
+            </button>
+        </form>
+    </div>
+</div>
+
+    <!-- 产品详情模态框 -->
+    <div id="productModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="hideProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="productDetailContent">
+                <!-- 产品详情内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // 产品页面特定功能
+        let currentProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        const productsPerPage = 9;
+
+        // 扩展产品数据
+        const extendedProducts = [
+            ...products,
+            {
+                id: 7,
+                name: '工业机械零件',
+                category: '机械设备',
+                price: 459.00,
+                unit: '件',
+                image: 'https://kimi-web-img.moonshot.cn/img/cdn.britannica.com/e1b677560dcbe88240e12d68745395213a82d49f.jpg',
+                description: '精密工业机械零件，质量保证'
+            },
+            {
+                id: 8,
+                name: '医疗防护用品',
+                category: '安全用品',
+                price: 129.00,
+                unit: '箱',
+                image: 'https://kimi-web-img.moonshot.cn/img/i.ytimg.com/961a051e5fdab48731dd5517841e0164d3e94a21.jpg',
+                description: '专业医疗防护用品，安全可靠'
+            },
+            {
+                id: 9,
+                name: '电子元器件',
+                category: '电子产品',
+                price: 35.80,
+                unit: '个',
+                image: 'https://kimi-web-img.moonshot.cn/img/media.licdn.com/c9955a3333333072bf324f4cefbe218d6efb59c4',
+                description: '高品质电子元器件，性能稳定'
+            },
+            {
+                id: 10,
+                name: '环保建材',
+                category: '建材',
+                price: 89.50,
+                unit: '平方米',
+                image: 'https://kimi-web-img.moonshot.cn/img/cdn.builder.io/3bd0f529bd1b99615093bab2f665725fe3fc5db7',
+                description: '环保建筑材料，绿色健康'
+            },
+            {
+                id: 11,
+                name: '智能控制系统',
+                category: '电子产品',
+                price: 899.00,
+                unit: '套',
+                image: 'https://kimi-web-img.moonshot.cn/img/www.rcinet.ca/b0a5bbe8a880fd9e41231d426c2e230112bf7feeb.jpg',
+                description: '智能控制系统，自动化管理'
+            },
+            {
+                id: 12,
+                name: '精密仪器',
+                category: '机械设备',
+                price: 2999.00,
+                unit: '台',
+                image: 'https://kimi-web-img.moonshot.cn/img/www.articles-place.com/8949b535dcf0fd43078f497072b86eabc48ecfec.jpg',
+                description: '高精度精密仪器，专业级设备'
+            }
+        ];
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            currentProducts = extendedProducts;
+            filteredProducts = [...currentProducts];
+            renderProducts();
+            updateProductCount();
+        });
+
+        // 搜索产品
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            filteredProducts = currentProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            currentPage = 1;
+            renderProducts();
+            updateProductCount();
+        }
+
+        // 按分类筛选产品
+        function filterProducts(category) {
+            // 更新按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (category === 'all') {
+                filteredProducts = [...currentProducts];
+            } else {
+                filteredProducts = currentProducts.filter(product => product.category === category);
+            }
+            currentPage = 1;
+            renderProducts();
+            updateProductCount();
+        }
+
+        // 按价格筛选产品
+        function filterByPrice(range) {
+            if (range === 'all') {
+                filteredProducts = [...currentProducts];
+            } else if (range === '0-100') {
+                filteredProducts = currentProducts.filter(product => product.price <= 100);
+            } else if (range === '100-500') {
+                filteredProducts = currentProducts.filter(product => product.price > 100 && product.price <= 500);
+            } else if (range === '500-1000') {
+                filteredProducts = currentProducts.filter(product => product.price > 500 && product.price <= 1000);
+            } else if (range === '1000+') {
+                filteredProducts = currentProducts.filter(product => product.price > 1000);
+            }
+            currentPage = 1;
+            renderProducts();
+            updateProductCount();
+        }
+
+        // 排序产品
+        function sortProducts() {
+            const sortValue = document.getElementById('sortSelect').value;
+
+            switch (sortValue) {
+                case 'price-low':
+                    filteredProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    filteredProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name':
+                    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default:
+                    filteredProducts = [...currentProducts];
+            }
+
+            renderProducts();
+        }
+
+        // 渲染产品
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = filteredProducts.slice(startIndex, endIndex);
+
+            grid.innerHTML = productsToShow.map(product => `
+                <div class="product-card rounded-xl overflow-hidden shadow-lg cursor-pointer" onclick="showProductDetail('${product.name}', '${product.description}')">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">${product.category}</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-4 text-sm">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-600 font-bold text-lg">¥${product.price.toFixed(2)}/${product.unit}</span>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updatePagination();
+        }
+
+        // 更新产品数量
+        function updateProductCount() {
+            document.getElementById('productCount').textContent = filteredProducts.length;
+        }
+
+        // 更新分页
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            const pageInfo = document.getElementById('pageInfo');
+            pageInfo.textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
+        }
+
+        // 切换页面
+        function changePage(direction) {
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+            if (direction === -1 && currentPage > 1) {
+                currentPage--;
+            } else if (direction === 1 && currentPage < totalPages) {
+                currentPage++;
+            }
+
+            renderProducts();
+        }
+    </script>
+</body>
+
+</html>

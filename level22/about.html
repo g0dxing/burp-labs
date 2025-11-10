@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 全球贸易通</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0F1A2B;
+            --secondary-blue: #2563EB;
+            --text-white: #FFFFFF;
+            --text-gray: #6B7280;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 50%, var(--primary-bg) 100%);
+            min-height: 100vh;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--secondary-blue), #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 26, 43, 0.9);
+        }
+        
+        .modal {
+    display: none;  /* 确保这是none而不是flex */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+        
+        .modal input::placeholder {
+            color: #666 !important;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 nav-blur border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">首页</a>
+                        <a href="products.html" class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">产品中心</a>
+                        <a href="index.html#services" class="text-gray-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">服务优势</a>
+                        <a href="about.html" class="text-white hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">关于我们</a>
+                        <button onclick="showLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            登录
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 关于我们内容 -->
+    <section class="pt-24 pb-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl font-bold mb-4">
+                    <span class="gradient-text">关于我们</span>
+                </h1>
+                <p class="text-xl text-gray-300">专业外贸服务，连接全球商机</p>
+            </div>
+            
+            <div class="glass-effect rounded-xl p-8 mb-8">
+                <h2 class="text-2xl font-bold mb-6">公司简介</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    锆德行外贸有限公司成立于2010年，是一家专业从事国际贸易的综合性企业。公司致力于为全球客户提供优质的产品和服务，在纺织品、电子产品、机械设备等领域拥有丰富的经验和资源。
+                </p>
+                <p class="text-gray-300 leading-relaxed">
+                    我们秉承"诚信经营、质量第一、客户至上"的经营理念，与全球50多个国家和地区的客户建立了长期稳定的合作关系。公司拥有专业的国际贸易团队和完善的供应链体系，能够为客户提供从产品采购、质量检验到物流运输的一站式服务。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="glass-effect rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4 text-blue-400">我们的使命</h3>
+                    <p class="text-gray-300">
+                        通过专业的国际贸易服务，帮助中国企业走向世界，为全球客户提供优质的中国制造产品，促进国际贸易的繁荣发展。
+                    </p>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4 text-green-400">我们的愿景</h3>
+                    <p class="text-gray-300">
+                        成为全球领先的国际贸易服务商，打造值得信赖的国际品牌，建立长期稳定的全球供应链网络。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="glass-effect rounded-xl p-8">
+                <h2 class="text-2xl font-bold mb-6">联系我们</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m-6 4a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">公司名称</p>
+                            <p class="text-white">锆德行外贸有限公司</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">联系人</p>
+                            <p class="text-white">邢经理：15545678910</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">电子邮箱</p>
+                            <p class="text-white">contact@g0dxing.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 bg-opacity-80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">全球贸易通</span>
+                </div>
+                <p class="text-gray-400 mb-4">专业外贸B2B平台，连接全球市场</p>
+                <p class="text-gray-500 text-sm">© 2025 锆德行外贸有限公司. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+<!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+        <button onclick="hideLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">用户登录</h3>
+            <p class="text-gray-600">请填写您的信息进行登录</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">账号</label>
+                <input type="text" id="username" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                <input type="password" id="password" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                登录
+            </button>
+        </form>
+    </div>
+</div>
+
+    <script src="main.js"></script>
+</body>
+</html>

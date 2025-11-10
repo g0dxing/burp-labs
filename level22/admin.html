@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - 全球贸易通</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0F1A2B;
+            --secondary-blue: #2563EB;
+            --text-white: #FFFFFF;
+            --text-gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #EF4444;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 50%, var(--primary-bg) 100%);
+            min-height: 100vh;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--secondary-blue), #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar {
+            background: rgba(15, 26, 43, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal input {
+            color: #333 !important;
+        }
+
+        .modal input::placeholder {
+            color: #666 !important;
+        }
+    </style>
+</head>
+
+<body class="text-white">
+    <!-- 顶部导航 -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-gray-900 bg-opacity-95 backdrop-filter backdrop-blur-lg border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="全球贸易通" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-bold gradient-text">管理后台</span>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-300">管理员</span>
+                    <button onclick="logout()"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="fixed left-0 top-16 h-full w-64 sidebar z-40">
+        <div class="p-6">
+            <nav class="space-y-2">
+                <button onclick="showSection('dashboard')"
+                    class="menu-item w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 active">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                    </svg>
+                    <span>仪表盘</span>
+                </button>
+
+                <button onclick="showSection('customers')"
+                    class="menu-item w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    <span>客户管理</span>
+                </button>
+
+                <button onclick="showSection('products')"
+                    class="menu-item w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <span>产品管理</span>
+                </button>
+
+                <button onclick="showSection('categories')"
+                    class="menu-item w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span>分类管理</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="ml-64 mt-16 p-8">
+        <!-- 仪表盘 -->
+        <div id="dashboard" class="content-section active">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">
+                    <span class="gradient-text">数据仪表盘</span>
+                </h1>
+                <p class="text-gray-300">实时监控平台运营数据</p>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">今日访问量</p>
+                            <p class="text-3xl font-bold text-white" id="todayVisits">1,249</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-400 text-sm">↗ 12.5%</span>
+                        <span class="text-gray-400 text-sm ml-2">较昨日</span>
+                    </div>
+                </div>
+
+                <div class="stat-card rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">新增客户</p>
+                            <p class="text-3xl font-bold text-white" id="newCustomers">89</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-400 text-sm">↗ 8.3%</span>
+                        <span class="text-gray-400 text-sm ml-2">较昨日</span>
+                    </div>
+                </div>
+
+                <div class="stat-card rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">产品总数</p>
+                            <p class="text-3xl font-bold text-white" id="totalProducts">156</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-blue-400 text-sm">↗ 3.2%</span>
+                        <span class="text-gray-400 text-sm ml-2">本月新增</span>
+                    </div>
+                </div>
+
+                <div class="stat-card rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">系统状态</p>
+                            <p class="text-3xl font-bold text-green-400" id="systemStatus">正常</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">运行时间: 99.8%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-effect rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-6">系统资源监控</h3>
+                    <div id="systemChart" style="height: 300px;"></div>
+                </div>
+
+                <div class="glass-effect rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-6">访问趋势</h3>
+                    <div id="visitorChart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 客户管理 -->
+        <div id="customers" class="content-section">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">
+                    <span class="gradient-text">客户管理</span>
+                </h1>
+                <p class="text-gray-300">管理客户信息和行为数据</p>
+            </div>
+
+            <div class="glass-effect rounded-xl p-6 mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="customerSearch" placeholder="搜索客户姓名或电话..."
+                            class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="searchCustomers()"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            搜索
+                        </button>
+                    </div>
+                    <button onclick="exportCustomers()"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        导出Excel
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container rounded-xl overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-white/10">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">姓名</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">电话</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">首次访问</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">最后活跃</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <!-- 客户数据将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 产品管理 -->
+        <div id="products" class="content-section">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">
+                    <span class="gradient-text">产品管理</span>
+                </h1>
+                <p class="text-gray-300">管理产品信息和状态</p>
+            </div>
+
+            <div class="glass-effect rounded-xl p-6 mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="productSearch" placeholder="搜索产品名称..."
+                            class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="searchProducts()"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            搜索
+                        </button>
+                    </div>
+                    <button onclick="showAddProductModal()"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        添加产品
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container rounded-xl overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-white/10">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">产品名称</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">分类</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">价格</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">状态</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- 产品数据将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 分类管理 -->
+        <div id="categories" class="content-section">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">
+                    <span class="gradient-text">分类管理</span>
+                </h1>
+                <p class="text-gray-300">管理产品分类结构</p>
+            </div>
+
+            <div class="glass-effect rounded-xl p-6 mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="categoryName" placeholder="输入分类名称..."
+                            class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="addCategory()"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            添加分类
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container rounded-xl overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-white/10">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">分类名称</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">产品数量</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">创建时间</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody">
+                        <!-- 分类数据将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 客户详情模态框 -->
+    <div id="customerDetailModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-4xl w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="hideCustomerDetailModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="customerDetailContent">
+                <!-- 客户详情内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加产品模态框 -->
+    <div id="addProductModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 relative">
+            <button onclick="hideAddProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">添加产品</h3>
+                <p class="text-gray-600">填写产品信息</p>
+            </div>
+
+            <form id="addProductForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">产品名称</label>
+                        <input type="text" id="productName" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">分类</label>
+                        <select id="productCategory" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">选择分类</option>
+                            <option value="纺织品">纺织品</option>
+                            <option value="电子产品">电子产品</option>
+                            <option value="能源设备">能源设备</option>
+                            <option value="机械设备">机械设备</option>
+                            <option value="建材">建筑材料</option>
+                            <option value="安全用品">安全防护</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">价格</label>
+                        <input type="number" id="productPrice" step="0.01" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">单位</label>
+                        <input type="text" id="productUnit" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">产品描述</label>
+                    <textarea id="productDescription" rows="4" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="hideAddProductModal()"
+                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        取消
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                        添加产品
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // 管理员登录状态检查
+        if (!localStorage.getItem('adminLoggedIn')) {
+            // 模拟管理员登录
+            localStorage.setItem('adminLoggedIn', 'true');
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeAdmin();
+        });
+
+        function initializeAdmin() {
+            // 初始化图表
+            initializeCharts();
+
+            // 加载数据
+            loadCustomers();
+            loadProducts();
+            loadCategories();
+
+            // 启动实时数据更新
+            startRealTimeUpdates();
+        }
+
+        function showSection(sectionId) {
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 显示选中的区域
+            document.getElementById(sectionId).classList.add('active');
+
+            // 更新菜单状态
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function initializeCharts() {
+            // 系统资源监控图表
+            const systemChart = echarts.init(document.getElementById('systemChart'));
+            const systemOption = {
+                backgroundColor: 'transparent',
+                textStyle: {
+                    color: '#ffffff'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                legend: {
+                    data: ['CPU', '内存', '磁盘'],
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: 'CPU',
+                        type: 'line',
+                        data: systemData.cpu,
+                        itemStyle: {
+                            color: '#2563EB'
+                        }
+                    },
+                    {
+                        name: '内存',
+                        type: 'line',
+                        data: systemData.memory,
+                        itemStyle: {
+                            color: '#10B981'
+                        }
+                    },
+                    {
+                        name: '磁盘',
+                        type: 'line',
+                        data: systemData.disk,
+                        itemStyle: {
+                            color: '#F59E0B'
+                        }
+                    }
+                ]
+            };
+            systemChart.setOption(systemOption);
+
+            // 访问趋势图表
+            const visitorChart = echarts.init(document.getElementById('visitorChart'));
+            const visitorOption = {
+                backgroundColor: 'transparent',
+                textStyle: {
+                    color: '#ffffff'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: '访问量',
+                        type: 'bar',
+                        data: systemData.visitors,
+                        itemStyle: {
+                            color: '#2563EB'
+                        }
+                    },
+                    {
+                        name: '新增客户',
+                        type: 'line',
+                        data: systemData.newCustomers,
+                        itemStyle: {
+                            color: '#10B981'
+                        }
+                    }
+                ]
+            };
+            visitorChart.setOption(visitorOption);
+        }
+
+        function loadCustomers() {
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = customers.map(customer => `
+                <tr class="border-b border-white/10 hover:bg-white/5">
+                    <td class="px-6 py-4 text-white">${customer.name}</td>
+                    <td class="px-6 py-4 text-white">${customer.phone}</td>
+                    <td class="px-6 py-4 text-gray-300">${customer.firstVisit}</td>
+                    <td class="px-6 py-4 text-gray-300">${customer.lastActive}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="showCustomerDetail(${customer.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                            查看详情
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = extendedProducts.map(product => `
+                <tr class="border-b border-white/10 hover:bg-white/5">
+                    <td class="px-6 py-4 text-white">${product.name}</td>
+                    <td class="px-6 py-4 text-gray-300">${product.category}</td>
+                    <td class="px-6 py-4 text-white">¥${product.price.toFixed(2)}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 bg-green-600 text-white rounded-full text-xs">上架</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex space-x-2">
+                            <button onclick="editProduct(${product.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                编辑
+                            </button>
+                            <button onclick="deleteProduct(${product.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                删除
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadCategories() {
+            const categories = ['纺织品', '电子产品', '能源设备', '机械设备', '建材', '安全用品'];
+            const tbody = document.getElementById('categoriesTableBody');
+            tbody.innerHTML = categories.map((category, index) => {
+                const productCount = extendedProducts.filter(p => p.category === category).length;
+                return `
+                    <tr class="border-b border-white/10 hover:bg-white/5">
+                        <td class="px-6 py-4 text-white">${category}</td>
+                        <td class="px-6 py-4 text-gray-300">${productCount}</td>
+                        <td class="px-6 py-4 text-gray-300">2025-01-${String(index + 1).padStart(2, '0')}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex space-x-2">
+                                <button onclick="editCategory('${category}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                    编辑
+                                </button>
+                                <button onclick="deleteCategory('${category}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                    删除
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function showCustomerDetail(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const modal = document.getElementById('customerDetailModal');
+            const content = document.getElementById('customerDetailContent');
+
+            content.innerHTML = `
+                <div class="mb-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-4">客户详情</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">基本信息</h4>
+                            <div class="space-y-3">
+                                <div><span class="font-medium">姓名:</span> ${customer.name}</div>
+                                <div><span class="font-medium">电话:</span> ${customer.phone}</div>
+                                <div><span class="font-medium">首次访问:</span> ${customer.firstVisit}</div>
+                                <div><span class="font-medium">最后活跃:</span> ${customer.lastActive}</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">访问统计</h4>
+                            <div class="space-y-3">
+                                <div><span class="font-medium">总访问次数:</span> ${customer.visits.length}</div>
+                                <div><span class="font-medium">平均停留时间:</span> 6.5分钟</div>
+                                <div><span class="font-medium">最感兴趣产品:</span> 太阳能设备</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-4">浏览历史</h4>
+                    <div class="table-container rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-700">访问时间</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-700">浏览页面</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-700">停留时长</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${customer.visits.map(visit => `
+                                    <tr class="border-b border-gray-200">
+                                        <td class="px-6 py-4 text-gray-800">${visit.time}</td>
+                                        <td class="px-6 py-4 text-gray-600">${visit.page}</td>
+                                        <td class="px-6 py-4 text-gray-600">${visit.duration}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideCustomerDetailModal() {
+            const modal = document.getElementById('customerDetailModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showAddProductModal() {
+            const modal = document.getElementById('addProductModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideAddProductModal() {
+            const modal = document.getElementById('addProductModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            document.getElementById('addProductForm').reset();
+        }
+
+        function addCategory() {
+            const categoryName = document.getElementById('categoryName').value.trim();
+            if (!categoryName) {
+                alert('请输入分类名称');
+                return;
+            }
+
+            alert('分类 "' + categoryName + '" 添加成功！');
+            document.getElementById('categoryName').value = '';
+            loadCategories();
+        }
+
+        function exportCustomers() {
+            // 模拟导出功能
+            const csvContent = "data:text/csv;charset=utf-8," +
+                "姓名,电话,首次访问时间,最后活跃时间\n" +
+                customers.map(c => `${c.name},${c.phone},${c.firstVisit},${c.lastActive}`).join("\n");
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "customers.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('客户数据导出成功！', 'success');
+        }
+
+        function startRealTimeUpdates() {
+            // 模拟实时数据更新
+            setInterval(() => {
+                // 更新今日访问量
+                const visitsElement = document.getElementById('todayVisits');
+                const currentVisits = parseInt(visitsElement.textContent.replace(',', ''));
+                const newVisits = currentVisits + Math.floor(Math.random() * 5) + 1;
+                visitsElement.textContent = newVisits.toLocaleString();
+
+                // 更新系统监控数据
+                systemData.cpu.shift();
+                systemData.cpu.push(Math.floor(Math.random() * 30) + 40);
+
+                systemData.memory.shift();
+                systemData.memory.push(Math.floor(Math.random() * 20) + 60);
+
+                systemData.disk.shift();
+                systemData.disk.push(Math.floor(Math.random() * 10) + 70);
+
+                // 重新初始化图表
+                initializeCharts();
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // 搜索功能
+        function searchCustomers() {
+            const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+            const filteredCustomers = customers.filter(customer =>
+                customer.name.toLowerCase().includes(searchTerm) ||
+                customer.phone.includes(searchTerm)
+            );
+
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = filteredCustomers.map(customer => `
+                <tr class="border-b border-white/10 hover:bg-white/5">
+                    <td class="px-6 py-4 text-white">${customer.name}</td>
+                    <td class="px-6 py-4 text-white">${customer.phone}</td>
+                    <td class="px-6 py-4 text-gray-300">${customer.firstVisit}</td>
+                    <td class="px-6 py-4 text-gray-300">${customer.lastActive}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="showCustomerDetail(${customer.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                            查看详情
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            const filteredProducts = extendedProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm)
+            );
+
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = filteredProducts.map(product => `
+                <tr class="border-b border-white/10 hover:bg-white/5">
+                    <td class="px-6 py-4 text-white">${product.name}</td>
+                    <td class="px-6 py-4 text-gray-300">${product.category}</td>
+                    <td class="px-6 py-4 text-white">¥${product.price.toFixed(2)}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 bg-green-600 text-white rounded-full text-xs">上架</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex space-x-2">
+                            <button onclick="editProduct(${product.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                编辑
+                            </button>
+                            <button onclick="deleteProduct(${product.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                删除
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 产品操作
+        function editProduct(productId) {
+            showNotification('编辑功能开发中...', 'info');
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('确定要删除这个产品吗？')) {
+                showNotification('产品删除成功！', 'success');
+            }
+        }
+
+        // 分类操作
+        function editCategory(categoryName) {
+            showNotification('编辑功能开发中...', 'info');
+        }
+
+        function deleteCategory(categoryName) {
+            if (confirm('确定要删除这个分类吗？')) {
+                showNotification('分类删除成功！', 'success');
+            }
+        }
+
+        // 添加产品表单处理
+        document.getElementById('addProductForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                unit: document.getElementById('productUnit').value,
+                description: document.getElementById('productDescription').value
+            };
+
+            // 模拟添加产品
+            extendedProducts.push({
+                id: extendedProducts.length + 1,
+                ...formData,
+                image: 'https://via.placeholder.com/300x200'
+            });
+
+            loadProducts();
+            hideAddProductModal();
+            showNotification('产品添加成功！', 'success');
+        });
+    </script>
+</body>
+
+</html>
