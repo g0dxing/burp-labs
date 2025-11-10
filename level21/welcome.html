@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录成功 - 海洋博物馆</title>
+    <meta name="description" content="欢迎访问海洋博物馆管理系统">
+    
+    <!-- Tailwind CSS -->
+    <script src="vendor/js/tailwind.js"></script>
+    
+    <!-- Animation Libraries -->
+    <script src="vendor/js/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --ocean-deep: #0B1426;
+            --ocean-blue: #1E3A5F;
+            --coral-orange: #FF6B47;
+            --sea-foam: #F0F8FF;
+            --pearl-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-blue) 100%);
+            color: var(--sea-foam);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .welcome-container {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .welcome-title {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--coral-orange);
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .user-info {
+            background: rgba(11, 20, 38, 0.5);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--coral-orange), #FF8A65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-role {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-button {
+            padding: 1rem;
+            background: rgba(255, 107, 71, 0.2);
+            border: 1px solid var(--coral-orange);
+            border-radius: 10px;
+            color: var(--coral-orange);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .action-button:hover {
+            background: var(--coral-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .logout-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, var(--coral-orange), #FF8A65);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 71, 0.3);
+        }
+        
+        .security-notice {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        .fade-in {
+            opacity: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 2rem;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container fade-in">
+        <div class="success-icon">🎉</div>
+        <h1 class="welcome-title">登录成功！</h1>
+        <p class="welcome-subtitle">
+            欢迎访问海洋博物馆管理系统<br>
+            您已成功通过身份验证，现在可以访问所有管理功能
+        </p>
+        
+        <div class="user-info">
+            <div class="user-avatar">👤</div>
+            <div class="user-name">管理员</div>
+            <div class="user-role">系统管理员 · 海洋博物馆</div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="exhibits.php" class="action-button">展览管理</a>
+            <a href="fish.php" class="action-button">生物管理</a>
+            <a href="education.html" class="action-button">教育管理</a>
+            <a href="about.html" class="action-button">系统设置</a>
+        </div>
+        
+        <button class="logout-button" onclick="logout()">安全退出</button>
+        
+        <div class="security-notice">
+            🔒 安全提示：请在使用完毕后及时退出登录，保护账户安全
+        </div>
+    </div>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            anime({
+                targets: '.fade-in',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 800,
+                easing: 'easeOutQuad'
+            });
+        });
+        
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = 'login.php?logout=true';
+            }
+        }
+        
+        // 自动跳转保护（5分钟后提示）
+        setTimeout(() => {
+            if (confirm('为了安全起见，系统即将自动退出登录。是否继续停留？')) {
+                // 用户选择继续停留，重置计时器
+                setTimeout(arguments.callee, 5 * 60 * 1000);
+            } else {
+                logout();
+            }
+        }, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

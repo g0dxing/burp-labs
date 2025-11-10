@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋博物馆 - 探索深海奥秘</title>
+    <meta name="description" content="探索神秘的海洋世界，了解海洋生物多样性，参与互动教育活动">
+    <script src="vendor/js/splide.min.js"></script>
+    <script src="vendor/js/pixi.min.js"></script>
+    <script src="vendor/js/echarts.min.js"></script>
+    <script src="vendor/js/p5.min.js"></script>
+    <link rel="stylesheet" href="vendor/css/splide.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="vendor/js/tailwind.js"></script>
+
+    <!-- Animation Libraries -->
+    <script src="vendor/js/anime.min.js"></script>
+    <style>
+        :root {
+            --ocean-deep: #0B1426;
+            --ocean-blue: #1E3A5F;
+            --coral-orange: #FF6B47;
+            --sea-foam: #F0F8FF;
+            --pearl-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-blue) 100%);
+            color: var(--sea-foam);
+            overflow-x: hidden;
+        }
+        
+        .hero-section {
+            height: 100vh;
+            background: url('resources/hero-ocean.jpg') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 20, 38, 0.4);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--sea-foam), var(--coral-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, var(--coral-orange), #FF8A65);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 71, 0.3);
+        }
+        
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+
+        
+        .card-hover {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .card-hover:hover {
+            background: rgba(30, 58, 95, 0.5);
+            border-color: var(--coral-orange);
+        }
+        
+        .exhibit-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--coral-orange);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .fish-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .fish-card {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .fish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .fish-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .fish-info {
+            padding: 1.5rem;
+        }
+        
+        .fish-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--sea-foam);
+        }
+        
+        .fish-category {
+            color: var(--coral-orange);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(11, 20, 38, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(240, 248, 255, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: cursive, sans-serif;  /* 替代 ZCOOL KuaiLe */
+        }
+        .page-title, .section-title {
+            font-family: Georgia, "Times New Roman", serif;  /* 替代 Noto Serif SC */
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--sea-foam);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--coral-orange);
+        }
+        
+        .chart-container {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .footer {
+            background: var(--ocean-deep);
+            padding: 3rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(240, 248, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer p {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--coral-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 71, 0.3);
+        }
+        
+        .fade-in {
+            opacity: 0;
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+        }
+        
+        #particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子系统容器 -->
+    <div id="particle-container"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🌊 海洋博物馆</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">首页</a></li>
+                <li><a href="exhibits.php" class="nav-link">展览</a></li>
+                <li><a href="fish.php" class="nav-link">海洋生物</a></li>
+                <li><a href="education.html" class="nav-link">教育活动</a></li>
+                <li><a href="about.html" class="nav-link">关于我们</a></li>
+<!--                <li><a href="login.php" class="nav-link">登录</a></li>-->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <div class="content-wrapper">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content fade-in">
+                <h1 class="hero-title">探索深海奥秘</h1>
+                <p class="hero-subtitle">走进神奇的海洋世界，发现生命的奇迹与多样性</p>
+                <a href="exhibits.php" class="cta-button">开始探索</a>
+            </div>
+        </section>
+
+        <!-- 特色展览 -->
+        <section class="section">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="section-title scroll-animate">特色展览</h2>
+                <div class="splide exhibition-carousel">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="exhibit-card card-hover">
+                                    <img src="resources/deep-sea.jpg" alt="深海奇观">
+                                    <h3 class="text-xl font-bold mb-2">深海奇观</h3>
+                                    <p class="text-sm opacity-80 mb-4">探索神秘的深海世界，了解生活在极端环境中的奇特生物</p>
+                                    <span class="text-xs bg-blue-600 px-2 py-1 rounded">全年开放</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="exhibit-card card-hover">
+                                    <img src="resources/coral-reef.jpg" alt="珊瑚礁生态系统">
+                                    <h3 class="text-xl font-bold mb-2">珊瑚礁生态系统</h3>
+                                    <p class="text-sm opacity-80 mb-4">走进色彩斑斓的珊瑚礁世界，了解海洋雨林的重要性</p>
+                                    <span class="text-xs bg-green-600 px-2 py-1 rounded">9个月</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="exhibit-card card-hover">
+                                    <img src="resources/whale.jpg" alt="海洋巨兽">
+                                    <h3 class="text-xl font-bold mb-2">海洋巨兽</h3>
+                                    <p class="text-sm opacity-80 mb-4">近距离接触地球上最大的动物蓝鲸</p>
+                                    <span class="text-xs bg-purple-600 px-2 py-1 rounded">8个月</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="exhibit-card card-hover">
+                                    <img src="resources/shark.jpg" alt="鲨鱼王国">
+                                    <h3 class="text-xl font-bold mb-2">鲨鱼王国</h3>
+                                    <p class="text-sm opacity-80 mb-4">打破对鲨鱼的刻板印象，了解这些古老生物的重要性</p>
+                                    <span class="text-xs bg-red-600 px-2 py-1 rounded">6个月</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 海洋生物展示 -->
+        <section class="section">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="section-title scroll-animate">海洋生物展示</h2>
+                <div class="fish-grid">
+                    <div class="fish-card card-hover scroll-animate" data-category="哺乳动物">
+                        <img src="resources/whale.jpg" alt="蓝鲸">
+                        <div class="fish-info">
+                            <h3 class="fish-name">蓝鲸</h3>
+                            <p class="fish-category">哺乳动物</p>
+                            <p class="text-sm opacity-80">地球上最大的动物，体长可达30米</p>
+                        </div>
+                    </div>
+                    <div class="fish-card card-hover scroll-animate" data-category="软骨鱼类">
+                        <img src="resources/shark.jpg" alt="大白鲨">
+                        <div class="fish-info">
+                            <h3 class="fish-name">大白鲨</h3>
+                            <p class="fish-category">软骨鱼类</p>
+                            <p class="text-sm opacity-80">海洋中的顶级掠食者，拥有300颗牙齿</p>
+                        </div>
+                    </div>
+                    <div class="fish-card card-hover scroll-animate" data-category="刺胞动物">
+                        <img src="resources/jellyfish.jpg" alt="水母">
+                        <div class="fish-info">
+                            <h3 class="fish-name">水母</h3>
+                            <p class="fish-category">刺胞动物</p>
+                            <p class="text-sm opacity-80">地球上最古老的多细胞动物之一</p>
+                        </div>
+                    </div>
+                    <div class="fish-card card-hover scroll-animate" data-category="特色鱼类">
+                        <img src="resources/seahorse.jpg" alt="海马">
+                        <div class="fish-info">
+                            <h3 class="fish-name">海马</h3>
+                            <p class="fish-category">特色鱼类</p>
+                            <p class="text-sm opacity-80">唯一由雄性怀孕的脊椎动物</p>
+                        </div>
+                    </div>
+                    <div class="fish-card card-hover scroll-animate" data-category="软体动物">
+                        <img src="resources/octopus.jpg" alt="章鱼">
+                        <div class="fish-info">
+                            <h3 class="fish-name">章鱼</h3>
+                            <p class="fish-category">软体动物</p>
+                            <p class="text-sm opacity-80">高度智能的无脊椎动物，能使用工具</p>
+                        </div>
+                    </div>
+                    <div class="fish-card card-hover scroll-animate" data-category="爬行动物">
+                        <img src="resources/turtle.jpg" alt="海龟">
+                        <div class="fish-info">
+                            <h3 class="fish-name">海龟</h3>
+                            <p class="fish-category">爬行动物</p>
+                            <p class="text-sm opacity-80">古老的海洋爬行动物，已存在1亿年</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="fish.php" class="cta-button">查看更多海洋生物</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 海洋数据可视化 -->
+        <section class="section">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="section-title scroll-animate">海洋数据洞察</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="chart-container scroll-animate">
+                        <h3 class="text-xl font-bold mb-4">海洋生物多样性统计</h3>
+                        <div id="biodiversity-chart" style="height: 300px;"></div>
+                    </div>
+                    <div class="chart-container scroll-animate">
+                        <h3 class="text-xl font-bold mb-4">海洋保护区分布</h3>
+                        <div id="protection-chart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 统计数据 -->
+        <section class="section">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="stats-grid">
+                    <div class="stat-card card-hover scroll-animate">
+                        <span class="stat-number">230,000+</span>
+                        <p class="stat-label">已知海洋物种</p>
+                    </div>
+                    <div class="stat-card card-hover scroll-animate">
+                        <span class="stat-number">71%</span>
+                        <p class="stat-label">地球表面被海洋覆盖</p>
+                    </div>
+                    <div class="stat-card card-hover scroll-animate">
+                        <span class="stat-number">95%</span>
+                        <p class="stat-label">海洋尚未被探索</p>
+                    </div>
+                    <div class="stat-card card-hover scroll-animate">
+                        <span class="stat-number">36,200</span>
+                        <p class="stat-label">海洋最深处（英尺）</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 教育活动预览 -->
+        <section class="section">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="section-title scroll-animate">教育活动</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card-hover scroll-animate">
+                        <div class="text-4xl mb-4">🧠</div>
+                        <h3 class="text-xl font-bold mb-2">海洋知识测验</h3>
+                        <p class="opacity-80 mb-4">测试你的海洋生物知识，学习有趣的海洋facts</p>
+                        <a href="education.html" class="text-coral-orange hover:underline">参与测验 →</a>
+                    </div>
+                    <div class="card-hover scroll-animate">
+                        <div class="text-4xl mb-4">🤿</div>
+                        <h3 class="text-xl font-bold mb-2">虚拟潜水体验</h3>
+                        <p class="opacity-80 mb-4">沉浸式海洋探索，与海洋生物互动</p>
+                        <a href="education.html" class="text-coral-orange hover:underline">开始潜水 →</a>
+                    </div>
+                    <div class="card-hover scroll-animate">
+                        <div class="text-4xl mb-4">🔬</div>
+                        <h3 class="text-xl font-bold mb-2">科学实验室</h3>
+                        <p class="opacity-80 mb-4">参与海洋科学研究，了解保护项目</p>
+                        <a href="education.html" class="text-coral-orange hover:underline">加入研究 →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 海洋博物馆. 保护海洋，从了解开始.</p>
+            <p>地址：海洋大道123号 | 电话：400-123-4567 | 开放时间：周二至周日 9:00-17:00</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+    
+    <script>
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生物多样性图表
+            const biodiversityChart = echarts.init(document.getElementById('biodiversity-chart'));
+            const biodiversityOption = {
+                backgroundColor: 'transparent',
+                textStyle: {
+                    color: '#F0F8FF'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(30, 58, 95, 0.9)',
+                    borderColor: '#FF6B47',
+                    textStyle: {
+                        color: '#F0F8FF'
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: '70%',
+                    data: [
+                        { value: 35, name: '鱼类' },
+                        { value: 25, name: '软体动物' },
+                        { value: 20, name: '甲壳类' },
+                        { value: 12, name: '刺胞动物' },
+                        { value: 8, name: '其他' }
+                    ],
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#FF6B47', '#4FC3F7', '#81C784', '#FFD54F', '#BA68C8'];
+                            return colors[params.dataIndex];
+                        }
+                    },
+                    label: {
+                        color: '#F0F8FF'
+                    }
+                }]
+            };
+            biodiversityChart.setOption(biodiversityOption);
+
+            // 保护区分布图表
+            const protectionChart = echarts.init(document.getElementById('protection-chart'));
+            const protectionOption = {
+                backgroundColor: 'transparent',
+                textStyle: {
+                    color: '#F0F8FF'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(30, 58, 95, 0.9)',
+                    borderColor: '#FF6B47',
+                    textStyle: {
+                        color: '#F0F8FF'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['太平洋', '大西洋', '印度洋', '北冰洋', '南极洋'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#F0F8FF'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#F0F8FF'
+                        }
+                    }
+                },
+                series: [{
+                    data: [45, 38, 25, 15, 12],
+                    type: 'bar',
+                    itemStyle: {
+                        color: '#FF6B47'
+                    }
+                }]
+            };
+            protectionChart.setOption(protectionOption);
+
+            // 响应式图表
+            window.addEventListener('resize', function() {
+                biodiversityChart.resize();
+                protectionChart.resize();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 海洋博物馆</title>
+    <meta name="description" content="了解海洋博物馆的历史、使命和团队，联系我们获取更多信息">
+
+    <!-- Tailwind CSS -->
+    <script src="vendor/js/tailwind.js"></script>
+
+    <!-- Animation Libraries -->
+    <script src="vendor/js/anime.min.js"></script>
+    <style>
+        :root {
+            --ocean-deep: #0B1426;
+            --ocean-blue: #1E3A5F;
+            --coral-orange: #FF6B47;
+            --sea-foam: #F0F8FF;
+            --pearl-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-blue) 100%);
+            color: var(--sea-foam);
+            overflow-x: hidden;
+        }
+
+        
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(11, 20, 38, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(240, 248, 255, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: cursive, sans-serif;  /* 替代 ZCOOL KuaiLe */
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--sea-foam);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--coral-orange);
+        }
+        
+        .main-content {
+            margin-top: 80px;
+            padding: 3rem 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 2rem;
+        }
+
+        .page-title, .section-title {
+            font-family: Georgia, "Times New Roman", serif;  /* 替代 Noto Serif SC */
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: start;
+        }
+        
+        .content-card {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: var(--coral-orange);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--coral-orange);
+        }
+        
+        .card-content {
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--coral-orange);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            opacity: 0;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: 60%;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 60%;
+            margin-right: 0;
+            text-align: left;
+        }
+        
+        .timeline-content {
+            background: rgba(30, 58, 95, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .timeline-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--coral-orange);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--coral-orange);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-member {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--coral-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--coral-orange);
+        }
+        
+        .member-title {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .member-description {
+            opacity: 0.8;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .contact-item {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0;
+        }
+        
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--coral-orange);
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-details {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--coral-orange);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        .footer {
+            background: var(--ocean-deep);
+            padding: 3rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(240, 248, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer p {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+        
+        .fade-in {
+            opacity: 0;
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 50px;
+                margin-right: 0;
+                text-align: left;
+            }
+            
+            .timeline-item::before {
+                left: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🌊 海洋博物馆</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">首页</a></li>
+                <li><a href="exhibits.php" class="nav-link">展览</a></li>
+                <li><a href="fish.php" class="nav-link">海洋生物</a></li>
+                <li><a href="education.html" class="nav-link">教育活动</a></li>
+                <li><a href="about.html" class="nav-link">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 页面标题 -->
+        <div class="page-header fade-in">
+            <h1 class="page-title">关于我们</h1>
+            <p class="page-subtitle">了解海洋博物馆的使命、历史和团队，一起保护蓝色星球</p>
+        </div>
+
+        <!-- 博物馆介绍 -->
+        <section class="section">
+            <div class="content-grid">
+                <div class="content-card scroll-animate">
+                    <span class="card-icon">🌊</span>
+                    <h2 class="card-title">我们的使命</h2>
+                    <div class="card-content">
+                        海洋博物馆致力于海洋科学教育、生物多样性保护和环境意识提升。我们相信，只有通过深入了解海洋世界，
+                        人们才能真正认识到保护海洋的重要性。我们的使命是通过展览、教育和研究，
+                        激发公众对海洋的热爱，推动海洋保护事业的发展。
+                    </div>
+                </div>
+                
+                <div class="content-card scroll-animate">
+                    <span class="card-icon">🎯</span>
+                    <h2 class="card-title">我们的愿景</h2>
+                    <div class="card-content">
+                        我们愿景是成为亚洲领先的海洋科学教育中心，建立一个可持续的海洋生态系统，
+                        让人类与海洋生物和谐共存。通过创新的展览和教育项目，
+                        我们希望培养新一代的海洋保护者，共同守护我们蓝色星球。
+                    </div>
+                </div>
+                
+                <div class="content-card scroll-animate">
+                    <span class="card-icon">💡</span>
+                    <h2 class="card-title">核心价值观</h2>
+                    <div class="card-content">
+                        科学严谨：基于最新的科学研究，提供准确的海洋知识。<br>
+                        教育创新：运用现代科技手段，创造沉浸式学习体验。<br>
+                        保护行动：不仅传播知识，更要推动实际的保护行动。<br>
+                        开放共享：向所有人开放，共享海洋科学的美好。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发展历程 -->
+        <section class="section">
+            <h2 class="section-title scroll-animate">发展历程</h2>
+            <div class="timeline">
+                <div class="timeline-item scroll-animate">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018年</div>
+                        <h3 class="timeline-title">博物馆筹建</h3>
+                        <p class="timeline-description">
+                            海洋博物馆项目正式启动，得到政府部门和海洋科研机构的大力支持。
+                            开始规划展览内容，收集海洋生物标本和相关资料。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-animate">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020年</div>
+                        <h3 class="timeline-title">场馆建设</h3>
+                        <p class="timeline-description">
+                            博物馆主体建筑完工，开始内部装修和展览布置。
+                            与国内外海洋研究机构建立合作关系，获得珍贵的展品和资料。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-animate">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022年</div>
+                        <h3 class="timeline-title">正式开放</h3>
+                        <p class="timeline-description">
+                            海洋博物馆正式对公众开放，首月接待游客超过10万人次。
+                            获得"年度最佳科普教育基地"称号，得到社会各界的广泛认可。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-animate">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年</div>
+                        <h3 class="timeline-title">数字化转型</h3>
+                        <p class="timeline-description">
+                            完成数字化升级改造，推出虚拟潜水体验、在线学习平台等创新项目。
+                            成为智慧博物馆建设示范点，为观众提供更丰富的互动体验。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 统计数据 -->
+        <section class="section">
+            <h2 class="section-title scroll-animate">博物馆数据</h2>
+            <div class="stats-grid">
+                <div class="stat-card scroll-animate">
+                    <span class="stat-number">500+</span>
+                    <p class="stat-label">展览物种</p>
+                </div>
+                <div class="stat-card scroll-animate">
+                    <span class="stat-number">50+</span>
+                    <p class="stat-label">互动展项</p>
+                </div>
+                <div class="stat-card scroll-animate">
+                    <span class="stat-number">100万+</span>
+                    <p class="stat-label">年访问量</p>
+                </div>
+                <div class="stat-card scroll-animate">
+                    <span class="stat-number">20+</span>
+                    <p class="stat-label">科研合作</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队介绍 -->
+        <section class="section">
+            <h2 class="section-title scroll-animate">专业团队</h2>
+            <div class="team-grid">
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👨‍🔬</div>
+                    <h3 class="member-name">张海洋</h3>
+                    <p class="member-title">馆长 / 海洋生物学博士</p>
+                    <p class="member-description">
+                        从事海洋生物学研究20余年，发表论文50余篇，
+                        致力于海洋保护教育和科普工作，推动海洋博物馆发展。
+                    </p>
+                </div>
+                
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👩‍🔬</div>
+                    <h3 class="member-name">李珊瑚</h3>
+                    <p class="member-title">研究部主任 / 生态学博士</p>
+                    <p class="member-description">
+                        珊瑚礁生态专家，主持多项海洋保护项目，
+                        在珊瑚人工繁殖和生态修复方面取得重要突破。
+                    </p>
+                </div>
+                
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👨‍🏫</div>
+                    <h3 class="member-name">王教育</h3>
+                    <p class="member-title">教育总监 / 教育学硕士</p>
+                    <p class="member-description">
+                        资深科普教育专家，设计开发多个获奖的教育项目，
+                        擅长将复杂科学知识转化为有趣的互动体验。
+                    </p>
+                </div>
+                
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👩‍💻</div>
+                    <h3 class="member-name">陈技术</h3>
+                    <p class="member-title">技术总监 / 计算机科学硕士</p>
+                    <p class="member-description">
+                        负责博物馆数字化建设，开发虚拟现实和增强现实体验，
+                        为传统展览注入现代科技元素。
+                    </p>
+                </div>
+                
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👨‍🎨</div>
+                    <h3 class="member-name">刘设计</h3>
+                    <p class="member-title">展览设计师 / 艺术设计硕士</p>
+                    <p class="member-description">
+                        专业的展览空间设计师，作品多次获得国际展览设计奖项，
+                        擅长创造沉浸式的海洋世界体验。
+                    </p>
+                </div>
+                
+                <div class="team-member scroll-animate">
+                    <div class="member-avatar">👩‍🔧</div>
+                    <h3 class="member-name">赵维护</h3>
+                    <p class="member-title">设施主管 / 工程学士</p>
+                    <p class="member-description">
+                        负责博物馆设施维护和展品保护，
+                        确保所有设备和展品处于最佳状态，保障游客安全。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section class="section">
+            <h2 class="section-title scroll-animate">联系我们</h2>
+            <div class="contact-info">
+                <div class="contact-item scroll-animate">
+                    <div class="contact-icon">📍</div>
+                    <h3 class="contact-title">地址</h3>
+                    <div class="contact-details">
+                        海洋大道123号<br>
+                        海洋科技园A区<br>
+                        邮编：200000
+                    </div>
+                </div>
+                
+                <div class="contact-item scroll-animate">
+                    <div class="contact-icon">📞</div>
+                    <h3 class="contact-title">电话</h3>
+                    <div class="contact-details">
+                        咨询热线：400-123-4567<br>
+                        团体预约：021-1234-5678<br>
+                        传真：021-8765-4321
+                    </div>
+                </div>
+                
+                <div class="contact-item scroll-animate">
+                    <div class="contact-icon">✉️</div>
+                    <h3 class="contact-title">邮箱</h3>
+                    <div class="contact-details">
+                        info@oceanmuseum.com<br>
+                        education@oceanmuseum.com<br>
+                        research@oceanmuseum.com
+                    </div>
+                </div>
+                
+                <div class="contact-item scroll-animate">
+                    <div class="contact-icon">🕐</div>
+                    <h3 class="contact-title">开放时间</h3>
+                    <div class="contact-details">
+                        周二至周日：9:00-17:00<br>
+                        （16:30停止入场）<br>
+                        周一闭馆（法定节假日除外）
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 海洋博物馆. 保护海洋，从了解开始.</p>
+            <p>地址：海洋大道123号 | 电话：400-123-4567 | 开放时间：周二至周日 9:00-17:00</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育活动 - 海洋博物馆</title>
+    <meta name="description" content="参与海洋博物馆的教育活动，学习海洋知识，体验虚拟潜水">
+    <script src="vendor/js/p5.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="vendor/js/tailwind.js"></script>
+
+    <!-- Animation Libraries -->
+    <script src="vendor/js/anime.min.js"></script>
+    <style>
+        :root {
+            --ocean-deep: #0B1426;
+            --ocean-blue: #1E3A5F;
+            --coral-orange: #FF6B47;
+            --sea-foam: #F0F8FF;
+            --pearl-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-blue) 100%);
+            color: var(--sea-foam);
+            overflow-x: hidden;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(11, 20, 38, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(240, 248, 255, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: cursive, sans-serif;  /* 替代 ZCOOL KuaiLe */
+        }
+        .page-title, .section-title {
+            font-family: Georgia, "Times New Roman", serif;  /* 替代 Noto Serif SC */
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--sea-foam);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--coral-orange);
+        }
+        
+        .main-content {
+            margin-top: 80px;
+            padding: 3rem 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 2rem;
+        }
+        
+
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .activity-card {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: var(--coral-orange);
+        }
+        
+        .activity-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .activity-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--coral-orange);
+        }
+        
+        .activity-description {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .activity-button {
+            background: linear-gradient(45deg, var(--coral-orange), #FF8A65);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .activity-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 71, 0.3);
+        }
+        
+        .quiz-container {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: none;
+        }
+        
+        .quiz-question {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .quiz-question h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--sea-foam);
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .quiz-option {
+            padding: 1rem;
+            background: rgba(11, 20, 38, 0.5);
+            border: 1px solid rgba(240, 248, 255, 0.2);
+            border-radius: 10px;
+            color: var(--sea-foam);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .quiz-option:hover {
+            border-color: var(--coral-orange);
+            background: rgba(255, 107, 71, 0.1);
+        }
+        
+        .quiz-option.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .quiz-option.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #F44336;
+            color: #F44336;
+        }
+        
+        .quiz-explanation {
+            background: rgba(255, 107, 71, 0.1);
+            border: 1px solid rgba(255, 107, 71, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .quiz-explanation p {
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(11, 20, 38, 0.3);
+            border-radius: 10px;
+        }
+        
+        .quiz-stat {
+            text-align: center;
+        }
+        
+        .quiz-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--coral-orange);
+            display: block;
+        }
+        
+        .quiz-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .virtual-dive {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .dive-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .dive-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 107, 71, 0.2);
+            border: 1px solid var(--coral-orange);
+            border-radius: 20px;
+            color: var(--coral-orange);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dive-button:hover {
+            background: var(--coral-orange);
+            color: white;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 0 2rem;
+        }
+        
+        .calendar-card {
+            background: rgba(30, 58, 95, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 248, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-card:hover {
+            border-color: var(--coral-orange);
+        }
+        
+        .event-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--coral-orange);
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-description {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .event-time {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            background: var(--ocean-deep);
+            padding: 3rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(240, 248, 255, 0.1);
+            margin-top: 5rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer p {
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+        
+        .fade-in {
+            opacity: 0;
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .activities-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .quiz-options {
+                max-width: 100%;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🌊 海洋博物馆</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">首页</a></li>
+                <li><a href="exhibits.php" class="nav-link">展览</a></li>
+                <li><a href="fish.php" class="nav-link">海洋生物</a></li>
+                <li><a href="education.html" class="nav-link">教育活动</a></li>
+                <li><a href="about.html" class="nav-link">关于我们</a></li>
+<!--                <li><a href="login.php" class="nav-link">登录</a></li>-->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 页面标题 -->
+        <div class="page-header fade-in">
+            <h1 class="page-title">教育活动</h1>
+            <p class="page-subtitle">通过互动体验和教育项目，深入了解海洋科学知识</p>
+        </div>
+
+        <!-- 教育活动网格 -->
+        <div class="activities-grid">
+            <!-- 海洋知识测验 -->
+            <div class="activity-card scroll-animate">
+                <span class="activity-icon">🧠</span>
+                <h2 class="activity-title">海洋知识测验</h2>
+                <p class="activity-description">
+                    测试你的海洋生物知识！我们准备了10道精心设计的题目，涵盖海洋生物、生态系统、环境保护等各个方面。
+                    每道题都有详细的解释，让你在答题过程中学到更多海洋知识。
+                </p>
+                <div class="quiz-stats">
+                    <div class="quiz-stat">
+                        <span class="quiz-stat-number">10</span>
+                        <span class="quiz-stat-label">题目数量</span>
+                    </div>
+                    <div class="quiz-stat">
+                        <span class="quiz-stat-number">0</span>
+                        <span class="quiz-stat-label">当前得分</span>
+                    </div>
+                    <div class="quiz-stat">
+                        <span class="quiz-stat-number">0</span>
+                        <span class="quiz-stat-label">已答题目</span>
+                    </div>
+                </div>
+                <button class="activity-button" id="start-quiz">开始测验</button>
+                
+                <div id="quiz-container" class="quiz-container">
+                    <!-- 测验内容将在这里动态加载 -->
+                </div>
+            </div>
+
+            <!-- 虚拟潜水体验 -->
+            <div class="activity-card scroll-animate">
+                <span class="activity-icon">🤿</span>
+                <h2 class="activity-title">虚拟潜水体验</h2>
+                <p class="activity-description">
+                    戴上虚拟潜水镜，潜入神秘的海洋世界！在这个沉浸式体验中，你可以探索珊瑚礁、深海峡谷，
+                    与各种海洋生物互动。使用控制面板调整深度，观察不同深度的海洋生态。
+                </p>
+                <button class="activity-button" id="start-dive">开始潜水</button>
+                
+                <div id="virtual-dive" class="virtual-dive">
+                    <h3>虚拟海洋世界</h3>
+                    <div id="dive-canvas" style="margin: 2rem 0; border-radius: 10px; overflow: hidden;"></div>
+                    <div class="dive-controls">
+                        <button class="dive-button" onclick="changeDepth('shallow')">浅海区 (0-50m)</button>
+                        <button class="dive-button" onclick="changeDepth('middle')">中层区 (50-200m)</button>
+                        <button class="dive-button" onclick="changeDepth('deep')">深海区 (200m+)</button>
+                        <button class="dive-button" onclick="toggleSound()">🔊 音效</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 科学实验室 -->
+            <div class="activity-card scroll-animate">
+                <span class="activity-icon">🔬</span>
+                <h2 class="activity-title">科学实验室</h2>
+                <p class="activity-description">
+                    加入我们的海洋科学研究项目！学习如何进行海水质量检测、海洋生物样本分析，
+                    了解海洋保护的重要性。我们的实验室配备了先进的设备，让你体验真实的科学研究过程。
+                </p>
+                <button class="activity-button" onclick="showComingSoon()">加入研究</button>
+            </div>
+
+            <!-- 海洋保护行动 -->
+            <div class="activity-card scroll-animate">
+                <span class="activity-icon">🌊</span>
+                <h2 class="activity-title">海洋保护行动</h2>
+                <p class="activity-description">
+                    参与我们的海洋保护志愿活动！学习如何减少塑料污染、保护海洋生物栖息地，
+                    为海洋保护贡献自己的力量。我们定期组织海滩清理、珊瑚种植等保护活动。
+                </p>
+                <button class="activity-button" onclick="showComingSoon()">参与行动</button>
+            </div>
+        </div>
+
+        <!-- 活动日历 -->
+        <div class="max-w-7xl mx-auto px-4 mt-12">
+            <h2 class="text-3xl font-bold text-center mb-8 scroll-animate" style="color: var(--coral-orange);">即将举行的活动</h2>
+            <div class="calendar-grid">
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年11月15日</div>
+                    <h3 class="event-title">海洋污染讲座</h3>
+                    <p class="event-description">
+                        著名海洋学家将为我们讲解海洋污染的现状和解决方案，了解塑料污染对海洋生态的影响。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>14:00-16:00</span>
+                    </div>
+                </div>
+                
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年11月22日</div>
+                    <h3 class="event-title">珊瑚礁保护工作坊</h3>
+                    <p class="event-description">
+                        学习珊瑚礁生态系统的知识，亲手制作珊瑚保护装置，为珊瑚礁保护贡献力量。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>10:00-12:00</span>
+                    </div>
+                </div>
+                
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年12月1日</div>
+                    <h3 class="event-title">海滩清理志愿活动</h3>
+                    <p class="event-description">
+                        组织志愿者到附近海滩进行垃圾清理，用实际行动保护海洋环境。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>09:00-15:00</span>
+                    </div>
+                </div>
+                
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年12月8日</div>
+                    <h3 class="event-title">海洋生物摄影展</h3>
+                    <p class="event-description">
+                        展示专业海洋摄影师的精彩作品，通过镜头了解海洋生物的美丽与脆弱。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>全天开放</span>
+                    </div>
+                </div>
+                
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年12月15日</div>
+                    <h3 class="event-title">海洋科学夏令营</h3>
+                    <p class="event-description">
+                        为期一周的青少年海洋科学夏令营，包含实验室体验、野外考察等丰富活动。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>5天4夜</span>
+                    </div>
+                </div>
+                
+                <div class="calendar-card scroll-animate">
+                    <div class="event-date">2024年12月22日</div>
+                    <h3 class="event-title">海洋音乐会</h3>
+                    <p class="event-description">
+                        以海洋为主题的音乐会，通过音乐传达对海洋的热爱和保护意识。
+                    </p>
+                    <div class="event-time">
+                        <span>🕐</span>
+                        <span>19:30-21:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 海洋博物馆. 保护海洋，从了解开始.</p>
+            <p>地址：海洋大道123号 | 电话：400-123-4567 | 开放时间：周二至周日 9:00-17:00</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+    
+    <script>
+        // 测验系统
+        let currentQuestion = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+        let quizQuestions = [];
+        
+        // 加载测验题目
+        async function loadQuizQuestions() {
+            try {
+                const response = await fetch('data/quiz-questions.json');
+                const data = await response.json();
+                quizQuestions = data.questions;
+                displayQuestion();
+            } catch (error) {
+                console.error('Failed to load quiz questions:', error);
+                document.getElementById('quiz-container').innerHTML = '<p>题目加载失败，请刷新页面重试。</p>';
+            }
+        }
+        
+        function displayQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            const container = document.getElementById('quiz-container');
+            
+            container.innerHTML = `
+                <div class="quiz-question">
+                    <h3>问题 ${currentQuestion + 1}/${quizQuestions.length}: ${question.question}</h3>
+                    <div class="quiz-options">
+                        ${question.options.map((option, index) => `
+                            <button class="quiz-option" onclick="selectAnswer(${index})">
+                                ${String.fromCharCode(65 + index)}. ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="quiz-stats">
+                        <div class="quiz-stat">
+                            <span class="quiz-stat-number">${currentQuestion + 1}</span>
+                            <span class="quiz-stat-label">当前题目</span>
+                        </div>
+                        <div class="quiz-stat">
+                            <span class="quiz-stat-number">${score}</span>
+                            <span class="quiz-stat-label">当前得分</span>
+                        </div>
+                        <div class="quiz-stat">
+                            <span class="quiz-stat-number">${answeredQuestions}</span>
+                            <span class="quiz-stat-label">已答题目</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function selectAnswer(selectedIndex) {
+            const question = quizQuestions[currentQuestion];
+            const isCorrect = selectedIndex === question.correct_answer;
+            
+            if (isCorrect) {
+                score++;
+            }
+            answeredQuestions++;
+            
+            // 显示答案结果
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((option, index) => {
+                if (index === selectedIndex) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                } else if (index === question.correct_answer) {
+                    option.classList.add('correct');
+                }
+                option.disabled = true;
+            });
+            
+            // 显示解释
+            setTimeout(() => {
+                showExplanation(question.explanation);
+            }, 1500);
+        }
+        
+        function showExplanation(explanation) {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML += `
+                <div class="quiz-explanation">
+                    <p><strong>解释：</strong>${explanation}</p>
+                    <button class="activity-button" onclick="nextQuestion()">
+                        ${currentQuestion < quizQuestions.length - 1 ? '下一题' : '查看结果'}
+                    </button>
+                </div>
+            `;
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            displayQuestion();
+        }
+        
+        function showQuizResults() {
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            let level = '';
+            
+            if (percentage >= 90) {
+                level = '海洋专家';
+            } else if (percentage >= 70) {
+                level = '海洋爱好者';
+            } else if (percentage >= 50) {
+                level = '海洋学习者';
+            } else {
+                level = '海洋新手';
+            }
+            
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div class="quiz-explanation">
+                    <h3>测验完成！</h3>
+                    <p><strong>你的得分：${score}/${quizQuestions.length} (${percentage}%)</strong></p>
+                    <p><strong>等级：${level}</strong></p>
+                    <p>感谢你参与海洋知识测验！继续学习，成为海洋保护专家。</p>
+                    <button class="activity-button" onclick="restartQuiz()">重新测验</button>
+                </div>
+            `;
+        }
+        
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = 0;
+            displayQuestion();
+        }
+        
+        // 虚拟潜水体验
+        let diveSketch;
+        let currentDepth = 'shallow';
+        let soundEnabled = true;
+        
+        function startVirtualDive() {
+            const diveContainer = document.getElementById('virtual-dive');
+            diveContainer.style.display = 'block';
+            
+            // 创建p5.js画布
+            diveSketch = new p5((p) => {
+                let fish = [];
+                let bubbles = [];
+                let depth = 0;
+                
+                p.setup = () => {
+                    const canvas = p.createCanvas(600, 400);
+                    canvas.parent('dive-canvas');
+                    
+                    // 创建鱼群
+                    for (let i = 0; i < 15; i++) {
+                        fish.push({
+                            x: Math.random() * p.width,
+                            y: Math.random() * p.height,
+                            vx: (Math.random() - 0.5) * 2,
+                            vy: (Math.random() - 0.5) * 0.5,
+                            size: Math.random() * 20 + 10,
+                            color: [Math.random() * 100 + 155, Math.random() * 100 + 155, Math.random() * 155 + 100]
+                        });
+                    }
+                    
+                    // 创建气泡
+                    for (let i = 0; i < 20; i++) {
+                        bubbles.push({
+                            x: Math.random() * p.width,
+                            y: Math.random() * p.height,
+                            size: Math.random() * 5 + 2,
+                            speed: Math.random() * 2 + 1
+                        });
+                    }
+                };
+                
+                p.draw = () => {
+                    // 根据深度设置背景颜色
+                    let bgColor;
+                    switch(currentDepth) {
+                        case 'shallow':
+                            bgColor = [100, 150, 200];
+                            break;
+                        case 'middle':
+                            bgColor = [50, 100, 150];
+                            break;
+                        case 'deep':
+                            bgColor = [20, 50, 80];
+                            break;
+                        default:
+                            bgColor = [100, 150, 200];
+                    }
+                    
+                    p.background(bgColor[0], bgColor[1], bgColor[2]);
+                    
+                    // 绘制光线效果
+                    for (let i = 0; i < 5; i++) {
+                        p.fill(255, 255, 255, 30);
+                        p.noStroke();
+                        p.ellipse(i * 120 + 60, 0, 20, p.height * 2);
+                    }
+                    
+                    // 绘制鱼群
+                    fish.forEach(f => {
+                        p.fill(f.color[0], f.color[1], f.color[2]);
+                        p.noStroke();
+                        p.ellipse(f.x, f.y, f.size, f.size * 0.6);
+                        
+                        // 鱼尾
+                        p.triangle(
+                            f.x - f.size/2, f.y,
+                            f.x - f.size, f.y - f.size/3,
+                            f.x - f.size, f.y + f.size/3
+                        );
+                        
+                        // 更新位置
+                        f.x += f.vx;
+                        f.y += f.vy;
+                        
+                        // 边界检查
+                        if (f.x < -f.size) f.x = p.width + f.size;
+                        if (f.x > p.width + f.size) f.x = -f.size;
+                        if (f.y < 0 || f.y > p.height) f.vy *= -1;
+                    });
+                    
+                    // 绘制气泡
+                    bubbles.forEach(bubble => {
+                        p.fill(255, 255, 255, 100);
+                        p.noStroke();
+                        p.ellipse(bubble.x, bubble.y, bubble.size);
+                        
+                        bubble.y -= bubble.speed;
+                        if (bubble.y < -bubble.size) {
+                            bubble.y = p.height + bubble.size;
+                            bubble.x = Math.random() * p.width;
+                        }
+                    });
+                    
+                    // 显示深度信息
+                    p.fill(255, 255, 255, 200);
+                    p.textSize(16);
+                    p.textAlign(p.LEFT);
+                    let depthText = '';
+                    switch(currentDepth) {
+                        case 'shallow':
+                            depthText = '浅海区域 (0-50米)';
+                            break;
+                        case 'middle':
+                            depthText = '中层区域 (50-200米)';
+                            break;
+                        case 'deep':
+                            depthText = '深海区域 (200米+)';
+                            break;
+                    }
+                    p.text(depthText, 20, 30);
+                };
+            });
+        }
+        
+        function changeDepth(depth) {
+            currentDepth = depth;
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            // 这里可以添加音效控制逻辑
+        }
+        
+        // 事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('start-quiz').addEventListener('click', function() {
+                const quizContainer = document.getElementById('quiz-container');
+                quizContainer.style.display = 'block';
+                loadQuizQuestions();
+            });
+            
+            document.getElementById('start-dive').addEventListener('click', function() {
+                startVirtualDive();
+            });
+        });
+        
+        function showComingSoon() {
+            alert('功能即将上线，敬请期待！');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "exhibits": [
+    {
+      "id": 1,
+      "title": "深海奇观",
+      "description": "探索神秘的深海世界，了解生活在极端环境中的奇特生物。从深海热液喷口到冰冷的深海平原，发现地球上最后的未知领域。",
+      "category": "深海生物",
+      "start_date": "2024-01-01",
+      "end_date": "2024-12-31",
+      "image": "resources/deep-sea.jpg",
+      "featured": true,
+      "location": "A展厅",
+      "duration": "全年开放"
+    },
+    {
+      "id": 2,
+      "title": "珊瑚礁生态系统",
+      "description": "走进色彩斑斓的珊瑚礁世界，了解这些海洋雨林的重要性和生物多样性。探索珊瑚与共生生物的奇妙关系。",
+      "category": "生态系统",
+      "start_date": "2024-03-01",
+      "end_date": "2024-11-30",
+      "image": "resources/coral-reef.jpg",
+      "featured": true,
+      "location": "B展厅",
+      "duration": "9个月"
+    },
+    {
+      "id": 3,
+      "title": "海洋巨兽",
+      "description": "近距离接触地球上最大的动物蓝鲸，了解这些海洋巨兽的生活习性、迁徙模式和保护现状。",
+      "category": "大型海洋生物",
+      "start_date": "2024-02-15",
+      "end_date": "2024-10-15",
+      "image": "resources/whale.jpg",
+      "featured": true,
+      "location": "C展厅",
+      "duration": "8个月"
+    },
+    {
+      "id": 4,
+      "title": "鲨鱼王国",
+      "description": "打破对鲨鱼的刻板印象，了解这些古老生物在海洋生态系统中的重要作用，以及保护鲨鱼的紧迫性。",
+      "category": "掠食者",
+      "start_date": "2024-04-01",
+      "end_date": "2024-09-30",
+      "image": "resources/shark.jpg",
+      "featured": false,
+      "location": "D展厅",
+      "duration": "6个月"
+    },
+    {
+      "id": 5,
+      "title": "水母花园",
+      "description": "欣赏这些古老而优雅的海洋生物，了解水母的生物学特征、生命周期和在海洋生态系统中的作用。",
+      "category": "无脊椎动物",
+      "start_date": "2024-05-01",
+      "end_date": "2024-12-31",
+      "image": "resources/jellyfish.jpg",
+      "featured": false,
+      "location": "E展厅",
+      "duration": "8个月"
+    },
+    {
+      "id": 6,
+      "title": "海马与 Pipefish",
+      "description": "探索这些独特的海洋鱼类，了解它们特殊的繁殖方式和伪装技巧，以及在传统中医中的保护问题。",
+      "category": "特色鱼类",
+      "start_date": "2024-06-01",
+      "end_date": "2024-11-30",
+      "image": "resources/seahorse.jpg",
+      "featured": false,
+      "location": "F展厅",
+      "duration": "6个月"
+    }
+  ]
+}
