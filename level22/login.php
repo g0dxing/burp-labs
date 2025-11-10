@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 // 正确的管理员凭据
 $correct_username = 'admin';
-$correct_password = 'xing@17810618182';
+$correct_password = 'morningstar_XingHao';
 
 // 获取POST数据
 $input = json_decode(file_get_contents('php://input'), true);
