@@ -1,15 +1,15 @@
-# Level 32 Writeup — 密码修改页面的密码枚举
+# Level 14 Writeup — 密码修改页面的密码枚举
 
 ## 关卡目标
 - 利用密码修改页面的错误消息差异枚举当前密码是否正确。
 
 ## 场景概览
-- 登录入口：`level32/login.html`
-- 登录后端：`level32/login.php`
-- 修改密码页：`level32/change-password.php`
-- 账户页：`level32/account.php`
-- 登出页：`level32/logout.php`
-- 用户数据：`level32/users.json`
+- 登录入口：`Expert/level14/login.html`
+- 登录后端：`Expert/level14/login.php`
+- 修改密码页：`Expert/level14/change-password.php`
+- 账户页：`Expert/level14/account.php`
+- 登出页：`Expert/level14/logout.php`
+- 用户数据：`Expert/level14/users.json`
 
 ## 核心缺陷
 - 对“当前密码错误”与其他错误的提示不同，泄露当前密码的正确与否。

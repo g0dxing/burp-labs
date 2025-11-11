@@ -1,13 +1,13 @@
-# Level 30 Writeup — Stay-logged-in Cookie 暴力破解
+# Level 12 Writeup — Stay-logged-in Cookie 暴力破解
 
 ## 关卡目标
 - 通过弱 Cookie 设计（可预测/低熵/无签名）进行暴力破解，伪装为已登录状态。
 
 ## 场景概览
-- 登录入口：`level30/login.html`
-- 登录后端：`level30/login.php`
-- 账户页：`level30/account.php`
-- 登出页：`level30/logout.php`
+- 登录入口：`Expert/level12/login.html`
+- 登录后端：`Expert/level12/login.php`
+- 账户页：`Expert/level12/account.php`
+- 登出页：`Expert/level12/logout.php`
 
 ## 核心缺陷
 - “保持登录” Cookie 未签名或熵不足，攻击者可伪造或爆破有效值。

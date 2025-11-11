@@ -1,13 +1,13 @@
-# Level 28 Writeup — 用户名枚举（账户锁定）
+# Level 10 Writeup — 用户名枚举（账户锁定）
 
 ## 关卡目标
 - 通过账户锁定策略的差异枚举用户是否存在。
 
 ## 场景概览
-- 登录入口：`level28/login.html`
-- 登录后端：`level28/login.php`
-- 锁定记录：`level28/lock.json`
-- 登录成功页：`level28/welcome.html`
+- 登录入口：`Expert/level10/login.html`
+- 登录后端：`Expert/level10/login.php`
+- 锁定记录：`Expert/level10/lock.json`
+- 登录成功页：`Expert/level10/welcome.html`
 
 ## 核心缺陷
 - 不同用户名触发的锁定/错误消息不同，泄露用户存在性。

@@ -1,12 +1,12 @@
-# Level 23 Writeup — 用户枚举与暴力破解
+# Level 5 Writeup — 用户枚举与暴力破解
 
 ## 关卡目标
 - 通过响应差异或逻辑提示枚举有效用户名，并对有效用户进行密码爆破。
 
 ## 场景概览
-- 登录入口：`level23/login.html`
-- 登录后端：`level23/login.php`
-- 登录成功页：`level23/welcome.html`
+- 登录入口：`Expert/level5/login.html`
+- 登录后端：`Expert/level5/login.php`
+- 登录成功页：`Expert/level5/welcome.html`
 
 ## 核心缺陷
 - 不同用户名的错误反馈或响应行为存在差异（如状态码、文案、延时），可用作用户存在性的侧信道。

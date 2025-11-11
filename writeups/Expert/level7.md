@@ -1,14 +1,14 @@
-# Level 25 Writeup — 密码重置逻辑缺陷
+# Level 7 Writeup — 密码重置逻辑缺陷
 
 ## 关卡目标
 - 利用密码重置流程中的逻辑瑕疵（如令牌可预测、校验缺失、覆盖其他用户）获取或重置账户密码。
 
 ## 场景概览
-- 登录入口：`level25/login.html`
-- 重置申请：`level25/reset-request.html`、`level25/reset-request.php`
-- 重置页面：`level25/reset.php`
-- 执行重置：`level25/do-reset.php`
-- 登录后页：`level25/welcome.html`
+- 登录入口：`Expert/level7/login.html`
+- 重置申请：`Expert/level7/reset-request.html`、`Expert/level7/reset-request.php`
+- 重置页面：`Expert/level7/reset.php`
+- 执行重置：`Expert/level7/do-reset.php`
+- 登录后页：`Expert/level7/welcome.html`
 
 ## 核心缺陷
 - 重置令牌生成或校验不严（可预测、未绑定用户/时间/一次性使用）。

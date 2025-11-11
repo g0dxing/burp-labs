@@ -1,12 +1,12 @@
-# Level 26 Writeup — 用户名枚举（响应时间）
+# Level 8 Writeup — 用户名枚举（响应时间）
 
 ## 关卡目标
 - 通过响应时间差异（Timing Attack）枚举有效用户名。
 
 ## 场景概览
-- 登录入口：`level26/login.html`
-- 登录后端：`level26/login.php`
-- 登录成功页：`level26/welcome.html`
+- 登录入口：`Expert/level8/login.html`
+- 登录后端：`Expert/level8/login.php`
+- 登录成功页：`Expert/level8/welcome.html`
 
 ## 核心缺陷
 - 服务端在处理存在用户与不存在用户时执行路径不同，导致响应时间可观测差异。

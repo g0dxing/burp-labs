@@ -1,13 +1,13 @@
-# Level 24 Writeup — 2FA 简单绕过
+# Level 6 Writeup — 2FA 简单绕过
 
 ## 关卡目标
 - 找到 2FA 验证流程中的薄弱环节（如跳过验证、伪造状态、逻辑缺口）。
 
 ## 场景概览
-- 登录入口：`level24/login.html`
-- 登录后端：`level24/login.php`
-- 2FA 验证：`level24/2fa.php`
-- 账户页：`level24/account.php`
+- 登录入口：`Expert/level6/login.html`
+- 登录后端：`Expert/level6/login.php`
+- 2FA 验证：`Expert/level6/2fa.php`
+- 账户页：`Expert/level6/account.php`
 
 ## 核心缺陷
 - 2FA 验证状态可被绕过（例如仅依赖客户端标志、缺少二次校验、未绑定会话）。

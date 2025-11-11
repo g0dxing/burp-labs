@@ -1,15 +1,15 @@
-# Level 31 Writeup — 密码重置主机污染（中间件）
+# Level 13 Writeup — 密码重置主机污染（中间件）
 
 ## 关卡目标
 - 通过污染 `Host` 或 `X-Forwarded-Host` 等头部，劫持密码重置链接的主机部分。
 
 ## 场景概览
-- 登录入口：`level31/login.html`
-- 重置请求：`level31/forgot-password.html`、`level31/forgot-password.php`
-- 邮箱模拟：`level31/mailbox.json`
-- 重置令牌：`level31/tokens.json`
-- 重置页：`level31/reset.php`
-- 登录成功页：`level31/welcome.html`
+- 登录入口：`Expert/level13/login.html`
+- 重置请求：`Expert/level13/forgot-password.html`、`Expert/level13/forgot-password.php`
+- 邮箱模拟：`Expert/level13/mailbox.json`
+- 重置令牌：`Expert/level13/tokens.json`
+- 重置页：`Expert/level13/reset.php`
+- 登录成功页：`Expert/level13/welcome.html`
 
 ## 核心缺陷
 - 后端或中间件在生成重置链接时信任来源头部，导致主机名可被攻击者注入。

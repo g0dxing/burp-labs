@@ -1,15 +1,15 @@
-# Level 33 Writeup — 多凭证一请求的防护缺陷
+# Level 15 Writeup — 多凭证一请求的防护缺陷
 
 ## 关卡目标
 - 通过一次请求在 `password` 字段中提交多个候选密码，命中其一即可成功登录。
 - 观察到后端对“尝试次数”的统计基于每请求而非每凭证，绕过常见的爆破防护。
 
 ## 场景概览
-- 登录入口：`level33/login.html`
-- 账号页：`level33/account.php`
-- 登录后端：`level33/login.php`
-- 用户数据：`level33/users.json`
-- 尝试计数：`level33/rate.json`（运行中生成）
+- 登录入口：`Expert/level15/login.html`
+- 账号页：`Expert/level15/account.php`
+- 登录后端：`Expert/level15/login.php`
+- 用户数据：`Expert/level15/users.json`
+- 尝试计数：`Expert/level15/rate.json`（运行中生成）
 
 ## 核心缺陷
 - 解析器接受 `password` 为字符串或数组。
@@ -32,7 +32,7 @@
    - 观察响应 `302` 状态与 `Location: account.php` 头部；或通过页面跳转/账户页的用户名显示来确认。
 
 ## 验证点与证据
-- `level33/login.php` 中对 `password` 类型的判断与数组遍历逻辑是缺陷根因。
+- `Expert/level15/login.php` 中对 `password` 类型的判断与数组遍历逻辑是缺陷根因。
 - `rate.json` 的尝试次数仅以请求维度累加，不体现每个候选密码的独立尝试。
 
 ## 修复建议

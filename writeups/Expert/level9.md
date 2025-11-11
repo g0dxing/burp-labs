@@ -1,13 +1,13 @@
-# Level 27 Writeup — IP 封禁的防护缺陷
+# Level 9 Writeup — IP 封禁的防护缺陷
 
 ## 关卡目标
 - 绕过基于 IP 的封禁与限速策略。
 
 ## 场景概览
-- 登录入口：`level27/login.html`
-- 登录后端：`level27/login.php`
-- 黑名单/计数：`level27/ip-block.json`
-- 登录成功页：`level27/welcome.html`
+- 登录入口：`Expert/level9/login.html`
+- 登录后端：`Expert/level9/login.php`
+- 黑名单/计数：`Expert/level9/ip-block.json`
+- 登录成功页：`Expert/level9/welcome.html`
 
 ## 核心缺陷
 - 信任可伪造的来源头（如 `X-Forwarded-For`），或仅按 IP 维度计数，导致轻易绕过。

@@ -1,13 +1,13 @@
-# Level 29 Writeup — 2FA 逻辑缺陷
+# Level 11 Writeup — 2FA 逻辑缺陷
 
 ## 关卡目标
 - 发现并利用 2FA 流程中的逻辑漏洞（如验证窗口、重放、未绑定用户）。
 
 ## 场景概览
-- 登录入口：`level29/login.html`
-- 登录后端：`level29/login.php`
-- 辅助文件：`level29/mfa.json`
-- 登录成功页：`level29/welcome.html`
+- 登录入口：`Expert/level11/login.html`
+- 登录后端：`Expert/level11/login.php`
+- 辅助文件：`Expert/level11/mfa.json`
+- 登录成功页：`Expert/level11/welcome.html`
 
 ## 核心缺陷
 - 2FA 验证码的生成/校验与用户会话绑定不足，或存在重放窗口。
