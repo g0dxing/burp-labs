@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 28 - 用户名枚举（账户锁定）</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 300px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; color: #555; font-weight: bold; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input[type="submit"] { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        input[type="submit"]:hover { background-color: #45a049; }
+        .hint { margin-top: 10px; color: #777; font-size: 12px; }
+    </style>
+    <!-- 说明：该关卡模拟 PortSwigger “Username enumeration via account lock”。发送空密码多次会触发有效用户名的账户锁定，从而出现与无效用户名不同的反馈。 -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Level 28 - 登录</h2>
+        <form action="login.php" method="POST">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" placeholder="例如：carlos" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码">
+            </div>
+            <input type="submit" value="登录">
+        </form>
+        
+    </div>
+</body>
+</html>

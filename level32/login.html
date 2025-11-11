@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level 32 - 登录</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .login-container { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 300px; }
+    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 6px; color: #555; font-weight: bold; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    input[type="submit"] { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    input[type="submit"]:hover { background-color: #45a049; }
+    .links { margin-top: 12px; font-size: 14px; text-align: center; }
+    .links a { color: #1a73e8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Level 32 - 登录</h2>
+    <form action="login.php" method="POST">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" placeholder="例如：wiener / carlos" required>
+      </div>
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" placeholder="请输入密码" required>
+      </div>
+      <input type="submit" value="登录">
+    </form>
+  </div>
+</body>
+</html>
