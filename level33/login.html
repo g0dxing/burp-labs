@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level 33 - 登录（JSON）</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .login-container { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 360px; }
+    h2 { text-align: center; color: #333; margin-bottom: 16px; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; margin-bottom: 6px; color: #555; font-weight: bold; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-family: monospace; }
+    input[type="submit"], button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    input[type="submit"]:hover, button:hover { background-color: #45a049; }
+    .links { margin-top: 12px; font-size: 14px; text-align: center; }
+    .links a { color: #1a73e8; text-decoration: none; }
+    /* 原提示样式移除，不再展示任何提示文案 */
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Level 33 - 登录</h2>
+    <div class="form-group">
+      <label for="username">用户名</label>
+      <input type="text" id="username" placeholder="用户名" value="">
+    </div>
+    <div class="form-group">
+      <label for="password">密码</label>
+      <input type="password" id="password" placeholder="密码" value="">
+    </div>
+    <button id="btn-login">登录</button>
+    <div class="form-group" style="margin-top: 12px;">
+      <label for="json">自定义 JSON</label>
+      <textarea id="json">{"username": "", "password": ""}</textarea>
+    </div>
+    <button id="btn-json">提交 JSON</button>
+    <div class="links">
+      <a href="account.php">我的账户</a>
+      &nbsp;|&nbsp;
+      <a href="logout.php">登出</a>
+    </div>
+  </div>
+
+  <script>
+    async function sendJson(payload) {
+      const res = await fetch('login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      // 如果返回302，fetch不会自动跳转，这里仅提示
+      const text = await res.text();
+      alert('响应状态: ' + res.status + '\n响应体(截断): ' + text.slice(0, 200));
+    }
+
+    document.getElementById('btn-login').addEventListener('click', () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      sendJson({ username, password });
+    });
+
+    document.getElementById('btn-json').addEventListener('click', () => {
+      const raw = document.getElementById('json').value;
+      try {
+        const payload = JSON.parse(raw);
+        sendJson(payload);
+      } catch (e) {
+        alert('JSON 解析失败: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>
