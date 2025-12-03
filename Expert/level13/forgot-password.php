@@ -44,7 +44,7 @@ if ($username !== '' && valid_user($username)) {
     file_put_contents($tokensPath, json_encode($tokens, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
     // 组合重置链接（漏洞：受 X-Forwarded-Host 影响）
-    $resetLink = 'http://' . $hostToUse . '/level31/reset.php?temp-forgot-password-token=' . urlencode($token);
+    $resetLink = 'http://' . $hostToUse . '/Expert/level13/reset.php?temp-forgot-password-token=' . urlencode($token);
 
     // 模拟“发送邮件”：写入邮箱箱（供学员查看）
     $mailbox = json_decode(file_get_contents($mailboxPath), true);
