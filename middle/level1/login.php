@@ -1,15 +1,15 @@
 <?php
-$zhenshiyonghu='admin';
-$zhenshimima='123456789';
+$zhenshiyonghu = 'admin';
+$zhenshimima = 'password1!';
 
-$user=$_POST['username'];
-$pass=$_POST['password'];
+require_once __DIR__ . '/../../common/ui.php';
+$user = isset($_POST['username']) ? (string)$_POST['username'] : '';
+$pass = isset($_POST['password']) ? (string)$_POST['password'] : '';
 
-if ($zhenshiyonghu===$user & $pass===$zhenshimima){
-    echo "login success!";
-}
-else{
-    echo "login error!!!";
-}
-
+$success = ($zhenshiyonghu === $user && $pass === $zhenshimima);
+http_response_code(302);
+header('Location: ' . ($success ? '/middle/level1/welcome.php' : '/middle/level1/login.html'));
+$target = 2048;
+echo str_repeat('x', $target);
+exit;
 ?>

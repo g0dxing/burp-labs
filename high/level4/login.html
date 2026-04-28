@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录页面</title>
+    <title>用户登录</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,37 +55,26 @@
         button:hover {
             background-color: #45a049;
         }
-        #response-message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-        }
-        .error {
-            background-color: #ffdddd;
-            color: #d8000c;
-        }
-        .success {
-            background-color: #ddffdd;
-            color: #4F8A10;
-        }
+        .home-back{ text-align:center; margin-top:14px; }
+        .home-btn{ display:inline-block; padding:8px 14px; background:#4CAF50; color:#fff; border-radius:8px; text-decoration:none; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+        .home-btn:hover{ background:#45a049; }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>用户登录</h2>
+        <h2>User Login</h2>
+        <!-- Remove action and method to handle via JS -->
         <form id="loginForm">
             <div class="form-group">
-                <label for="username">用户名:</label>
+                <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="password">密码:</label>
+                <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">登录</button>
+            <button type="submit">Login</button>
         </form>
-        <div id="response-message"></div>
     </div>
 
     <script>
@@ -95,13 +84,11 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // 创建JSON数据
             const loginData = {
                 username: username,
                 password: password
             };
             
-            // 发送POST请求
             fetch('login.php', {
                 method: 'POST',
                 headers: {
@@ -109,27 +96,16 @@
                 },
                 body: JSON.stringify(loginData)
             })
-            .then(response => response.json())
-            .then(data => {
-                const responseElement = document.getElementById('response-message');
-                responseElement.style.display = 'block';
-                
-                if (data.success) {
-                    responseElement.className = 'success';
-                    responseElement.textContent = '登录成功!';
-                    // 登录成功后的操作，例如跳转到主页
-                    // window.location.href = 'dashboard.html';
-                } else {
-                    responseElement.className = 'error';
-                    responseElement.textContent = data.message || '登录失败，请检查用户名和密码';
-                }
+            .then(response => response.text())
+            .then(html => {
+                // Replace the entire document with the response HTML
+                document.open();
+                document.write(html);
+                document.close();
             })
             .catch(error => {
                 console.error('Error:', error);
-                const responseElement = document.getElementById('response-message');
-                responseElement.style.display = 'block';
-                responseElement.className = 'error';
-                responseElement.textContent = '请求失败，请稍后再试';
+                alert('Request failed');
             });
         });
     </script>

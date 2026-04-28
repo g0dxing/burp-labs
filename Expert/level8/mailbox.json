@@ -1,0 +1,37 @@
+[
+    {
+        "to": "admin",
+        "subject": "Password Reset",
+        "link": "http:\/\/127.0.0.1:8888\/Expert\/level8\/reset.php?temp-forgot-password-token=01032d2a643b99ea116b6379",
+        "host_used": "127.0.0.1:8888",
+        "time": "2025-12-08T23:23:23+08:00"
+    },
+    {
+        "to": "admin",
+        "subject": "Password Reset",
+        "link": "http:\/\/127.0.0.1:8888\/Expert\/level8\/reset.php?temp-forgot-password-token=b1bda18fcdaa7ffc03b8a71b",
+        "host_used": "127.0.0.1:8888",
+        "time": "2025-12-08T23:29:19+08:00"
+    },
+    {
+        "to": "admin",
+        "subject": "Password Reset",
+        "link": "http:\/\/192.168.2.208:3000\/Expert\/level8\/reset.php?temp-forgot-password-token=a7d61f1abfe0eab8787cf226",
+        "host_used": "192.168.2.208:3000",
+        "time": "2025-12-08T23:31:14+08:00"
+    },
+    {
+        "to": "admin",
+        "subject": "Password Reset",
+        "link": "http:\/\/192.168.2.208:3000\/Expert\/level8\/reset.php?temp-forgot-password-token=93f67cfa61711805a745b870",
+        "host_used": "192.168.2.208:3000",
+        "time": "2025-12-08T23:32:33+08:00"
+    },
+    {
+        "to": "admin",
+        "subject": "Password Reset",
+        "link": "http:\/\/127.0.0.1:8888\/Expert\/level8\/reset.php?temp-forgot-password-token=c7a1401bced2670b47b4e814",
+        "host_used": "127.0.0.1:8888",
+        "time": "2025-12-08T23:33:26+08:00"
+    }
+]

@@ -1,66 +1,86 @@
 <?php
-// Level 23: 漏洞点为用户枚举（根据账号存在与否返回不同错误信息）
 session_start();
+require_once __DIR__ . '/../../common/ui.php';
 
-// 模拟一个真实环境中的用户数据库（明文密码仅用于靶场演示）
-// 仅保留一个正确账号：durant（密码仅用于靶场演示）
 $users = [
-    'durant' => 'Durant!23',
+    'admin' => 'Apple@123',
 ];
 
-// 仅接受 POST 登录
+$storePath = __DIR__ . DIRECTORY_SEPARATOR . 'ip-block.json';
+if (!file_exists($storePath)) {
+    file_put_contents($storePath, json_encode(new stdClass(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
+
+function getClientIp(): string {
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $xff = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        $parts = explode(',', $xff);
+        return trim($parts[0]);
+    }
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+function loadStore(string $path): array {
+    $raw = file_get_contents($path);
+    $data = json_decode($raw, true);
+    return is_array($data) ? $data : [];
+}
+
+function saveStore(string $path, array $data): void {
+    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo '<!DOCTYPE html><html lang="zh-CN"><meta charset="utf-8"><body>';
-    echo '<p>仅支持 POST 登录请求。</p>';
-    echo '<a href="login.html">返回登录页</a>';
-    echo '</body></html>';
+    render_error('方法不被允许', '仅支持 POST 登录请求', 'login.html');
     exit;
 }
 
 $username = isset($_POST['username']) ? trim((string)$_POST['username']) : '';
 $password = isset($_POST['password']) ? (string)$_POST['password'] : '';
 
-// 简单校验：防止空提交
 if ($username === '' || $password === '') {
-    http_response_code(400);
-    renderError('账号或密码错误');
+    render_error('Login Failed', 'Invalid username or password');
     exit;
 }
 
-// 枚举型逻辑：
-// 1) 若账号不存在，返回“账号或密码错误”（泛化错误）。
-// 2) 若账号存在但密码错误，返回“密码错误”（具体错误）。
-// 这样攻击者可通过差异化反馈枚举出有效用户名。
-if (!array_key_exists($username, $users)) {
-    http_response_code(401);
-    renderError('账号或密码错误');
+$ip = getClientIp();
+$store = loadStore($storePath);
+$now = time();
+$windowSeconds = 600; 
+$maxFailures = 5;     
+
+if (!isset($store[$ip])) {
+    $store[$ip] = [ 'count' => 0, 'blocked_until' => 0, 'updated_at' => $now ];
+}
+
+if (($now - (int)$store[$ip]['updated_at']) > $windowSeconds) {
+    $store[$ip]['count'] = 0;
+    $store[$ip]['updated_at'] = $now;
+    $store[$ip]['blocked_until'] = 0;
+}
+
+if ((int)$store[$ip]['blocked_until'] > $now) {
+    render_error('Access Denied', '当前 IP 封禁中，请稍后再试');
     exit;
 }
 
-if (!hash_equals($users[$username], $password)) {
-    http_response_code(401);
-    renderError('密码错误');
+if (!array_key_exists($username, $users) || !hash_equals($users[$username], $password)) {
+    $store[$ip]['count'] = (int)$store[$ip]['count'] + 1;
+    $store[$ip]['updated_at'] = $now;
+    if ($store[$ip]['count'] >= $maxFailures) {
+        $store[$ip]['blocked_until'] = $now + 120;
+    }
+    saveStore($storePath, $store);
+    render_error('Login Failed', 'Invalid username or password');
     exit;
 }
 
-// 登录成功：跳转到受限页面
+$store[$ip]['count'] = 0;
+$store[$ip]['blocked_until'] = 0;
+$store[$ip]['updated_at'] = $now;
+saveStore($storePath, $store);
+
 $_SESSION['user'] = $username;
-header('Location: welcome.html');
+render_success('Login Successful', 'Welcome, ' . htmlspecialchars($username) . '! Your flag is: flag{9b2c7a8d-4f6e-4a3c-9d5e-f7b8c1a6d3e0}', 'login.html');
 exit;
-
-// ---- 页面渲染辅助函数 ----
-function renderError(string $message): void {
-    // 极简错误页，展示差异化提示并提供返回链接
-    echo '<!DOCTYPE html><html lang="zh-CN">';
-    echo '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
-    echo '<title>登录失败</title>';
-    echo '<style>body{font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Arial,sans-serif;display:grid;place-items:center;min-height:100vh;background:#0f172a;color:#e5e7eb;margin:0}';
-    echo '.card{width:360px;max-width:92vw;background:#111827;border:1px solid #374151;border-radius:12px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.35)}';
-    echo '.msg{margin:0 0 12px;font-size:1rem;color:#fca5a5}a{color:#93c5fd}</style></head><body>';
-    echo '<div class="card">';
-    echo '<h1 style="margin:0 0 8px;font-size:1.25rem;">登录失败</h1>';
-    echo '<p class="msg">' . htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
-    echo '<p><a href="login.html">返回登录页</a></p>';
-    echo '</div></body></html>';
-}
+?>

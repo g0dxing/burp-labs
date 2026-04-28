@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Level 23 - 登录</title>
+  <title>用户登录</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -51,21 +51,24 @@
       font-size: 16px;
     }
     input[type="submit"]:hover { background-color: #45a049; }
+    .home-back{ text-align:center; margin-top:14px; }
+    .home-btn{ display:inline-block; padding:8px 14px; background:#4CAF50; color:#fff; border-radius:8px; text-decoration:none; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+    .home-btn:hover{ background:#45a049; }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h2>渗透靶场 Level 23</h2>
+    <h2>User Login</h2>
     <form action="login.php" method="POST" autocomplete="off" novalidate>
       <div class="form-group">
-        <label for="username">账号</label>
-        <input id="username" name="username" type="text" placeholder="例如：admin" required />
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required />
       </div>
       <div class="form-group">
-        <label for="password">密码</label>
-        <input id="password" name="password" type="password" placeholder="输入密码" required />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required />
       </div>
-      <input type="submit" value="登录" />
+      <input type="submit" value="Login" />
     </form>
   </div>
 </body>
