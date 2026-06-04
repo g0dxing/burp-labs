@@ -6,7 +6,8 @@ $xianzaiTimestamp=time();
 $user=$_POST['username'];
 $pass=$_POST['password'];
 $Timestamp=$_POST['_Timestamp'];
-
+//强制转换为整数
+$Timestamp=(int)$Timestamp;
 
 $difference = abs($xianzaiTimestamp - $Timestamp);
 if($difference < 3){
