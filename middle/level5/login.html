@@ -57,14 +57,11 @@
             background-color: #45a049;
         }
     </style>
-    <!-- 引入MD5库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 </head>
 <body>
     <div class="login-container">
         <h2>用户登录</h2>
-        
-        <form action="login.php" method="POST" onsubmit="return hashPassword()">
+        <form action="login.php" method="POST">
             <div class="form-group">
                 <label for="username">用户名:</label>
                 <input type="text" id="username" name="username" required>
@@ -77,19 +74,6 @@
                 <input type="submit" value="登录">
             </div>
         </form>
-        
-        <script>
-            function hashPassword() {
-                // 获取密码输入框
-                var passwordInput = document.getElementById('password');
-                // 对密码进行MD5加密
-                var hashedPassword = md5(passwordInput.value);
-                // 将加密后的密码设置回输入框
-                passwordInput.value = hashedPassword;
-                // 允许表单提交
-                return true;
-            }
-        </script>
     </div>
 </body>
 </html>
