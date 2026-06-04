@@ -5,7 +5,7 @@ $zhenshimima='123456789';
 $user=$_POST['username'];
 $pass=$_POST['password'];
 
-if ($zhenshiyonghu===$user & $pass===$zhenshimima){
+if ($zhenshiyonghu===$user && $pass===$zhenshimima){
     echo "login success!";
 }
 else{

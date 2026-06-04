@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 // 获取原始的POST数据（Base64编码的字符串）
 $base64Data = file_get_contents('php://input');

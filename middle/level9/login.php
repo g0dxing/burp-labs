@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 $zhenshiyonghu='admin';
 $zhenshimima='1bbd886460827015e5d605ed44252251';//11111111的md5编码
 

@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 // 获取原始的POST数据（md5编码的字符串）
 $md5Data = file_get_contents('php://input');

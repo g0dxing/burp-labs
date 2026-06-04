@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 $zhenshiyonghu='admin';
 $zhenshimima='38e27dd94f836975cc3dc664ff8742f5';//abc123456789的md5编码，g0dxing加盐,加盐模式：hmac
 $user=$_POST['username'];

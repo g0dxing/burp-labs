@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 $zhenshiyonghu='admin';
 $zhenshimima='TE9WRTUyMDEzMTQ=';//LOVE5201314的base64编码
 
