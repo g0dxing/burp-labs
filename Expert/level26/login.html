@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 28 - 用户名枚举（账户锁定）</title>
+    <title>用户名枚举（账户锁定）</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .login-container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 300px; }
@@ -15,11 +15,10 @@
         input[type="submit"]:hover { background-color: #45a049; }
         .hint { margin-top: 10px; color: #777; font-size: 12px; }
     </style>
-    <!-- 说明：该关卡模拟 PortSwigger “Username enumeration via account lock”。发送空密码多次会触发有效用户名的账户锁定，从而出现与无效用户名不同的反馈。 -->
 </head>
 <body>
     <div class="login-container">
-        <h2>Level 28 - 登录</h2>
+        <h2>登录</h2>
         <form action="login.php" method="POST">
             <div class="form-group">
                 <label for="username">用户名</label>
